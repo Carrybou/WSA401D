@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   web:
-    image: webdevops/php-apache:7.4
+    image: mmi3docker/symfony-2023
     container_name: sae401_app
     restart: always
     volumes:
