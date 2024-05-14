@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  web:
+    image: webdevops/php-apache:7.4
+    container_name: sae401_app
+    restart: always
+    volumes:
+      - ./:/app
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+    depends_on:
+      - db
+    ports:
+      - "5151:80"
+
+  db:
+    image: mysql:5.7
+    container_name: sae401_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sae401
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "5152:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: sae401_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: user
+      PMA_PASSWORD: pass
+    ports:
+      - "5153:80"
+    depends_on:
+      - db
+
+  maildev:
+    image: maildev/maildev
+    container_name: symfony_maildev
+    restart: always
+    ports:
+      - "1080:80"
+      - "1025:25"
+
+volumes:
+  db_data:
