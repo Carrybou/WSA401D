@@ -26,4 +26,11 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
->>>>>>> b848962 (Ajout de .gitignore avec /vendor ignoré)
+<<<<<<< HEAD
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
