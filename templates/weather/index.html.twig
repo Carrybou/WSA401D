@@ -7,6 +7,59 @@
     <h1>Weather in {{ city }}</h1>
     <p>The current temperature is {{ temperature }}°C.</p>
 
+    <h2>Temperature and Wind Speed Chart</h2>
+    <canvas id="weatherChart" width="500" height="500"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        let delayed;
+        const weatherChart = new Chart(ctx, {
+            type: 'bar', // Default type
+            data: {
+                labels: {{ chartData.labels|json_encode|raw }},
+                datasets: [{
+                    type: 'line', // Override the default type for this dataset
+                    label: 'Température',
+                    data: {{ chartData.temperature|json_encode|raw }},
+                    borderColor: 'red',
+                    fill: false,
+                    yAxisID: 'temp',
+                }, {
+                    label: 'Vitesse du vent',
+                    data: {{ chartData.windSpeed|json_encode|raw }},
+                    borderColor: 'blue',
+                    yAxisID: 'wind',
+                }]
+            },
+            options: {
+                animation: {
+                    onComplete: () => {
+                        delayed = true;
+                    },
+                    delay: (context) => {
+                        let delay = 0;
+                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                        }
+                        return delay;
+                    },
+                },
+                scales: {
+                    temp: {
+                        type: 'linear',
+                        position: 'left',
+                    },
+                    wind: {
+                        type: 'linear',
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                }
+            }
+        });
+    </script>
     <h2>5 Day / 3 Hour Forecast</h2>
     {% for forecast in forecast %}
         <div>
