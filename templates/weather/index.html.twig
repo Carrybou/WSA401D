@@ -3,19 +3,55 @@
 {% block title %}Météo{% endblock %}
 
 {% block body %}
-    {# Formulaire de recherche pour rechercher une ville #}
+    <div class="pre-info-btn">
+        <form class="form-search" method="post" action="{{ path('weather_home') }}">
+            <label for="city">Ville :</label>
+            <input type="text" id="city" name="city" value="{{ selectedCity }}" required>
+            <button class="search" type="submit">Rechercher</button>
+        </form>
+
+        {% if selectedCity in favoriteCities %}
+            <form method="post" action="{{ path('weather_home') }}">
+                <input type="hidden" name="city" value="{{ selectedCity }}">
+                <input type="hidden" name="favorite_action" value="remove">
+                <button type="submit" class="btn-favorite btn-favorite-R">Retirer des favoris ♡</button>
+            </form>
+        {% else %}
+            <form method="post" action="{{ path('weather_home') }}">
+                <input type="hidden" name="city" value="{{ selectedCity }}">
+                <input type="hidden" name="favorite_action" value="add">
+                <button type="submit" class="btn-favorite btn-favorite-A">Ajouter aux favoris ♥</button>
+            </form>
+        {% endif %}
+    </div>
+    
+
+    {% if error %}
+        <div class="error" id="error-message">{{ error|raw }}</div>
+    {% endif %}
 
     {% if weatherData is defined and weatherData[selectedCity] is defined %}
-        <h1>Weather in {{ selectedCity }}</h1>
-        <p>The current temperature is {{ weatherData[selectedCity].temperature }}°C.</p>
-        <h2>5 Day / 3 Hour Forecast</h2>
+        <h1>Météo à {{ selectedCity }}</h1>
+        <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
+        <h2>Prévisions sur 5 jours / 3 heures</h2>
         {% for item in weatherData[selectedCity].forecast %}
             <div>
-                <p>Date: {{ item.dt_txt }}</p>
-                <p>Weather: {{ item.weather[0].description }}</p>
+                <p>Date : {{ item.dt_txt }}</p>
+                <p>Météo : {{ item.weather[0].description }}</p>
             </div>
         {% endfor %}
     {% else %}
-        <p>No weather data available.</p>
+        <p>Pas de données météorologiques disponibles.</p>
     {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var errorMessage = document.getElementById('error-message');
+            if (errorMessage) {
+                errorMessage.addEventListener('click', function() {
+                    errorMessage.style.display = 'none';
+                });
+            }
+        });
+    </script>
 {% endblock %}

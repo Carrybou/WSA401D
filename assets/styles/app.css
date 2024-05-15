@@ -119,6 +119,72 @@ header{
     background-image: none;
 }
 
+/* Home Page */
+.pre-info-btn{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 80px 30px 80px;
+}
+.btn-favorite{
+    width: 230px;
+}
+
+.search{
+    width: auto;
+    margin-left: 10px;
+}
+.search:hover::before{
+    content: 'Rechercher';
+}
+
+.form-search{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap:10px;
+}
+
+.btn-favorite-R:hover::before{
+    content: 'Retirer des favoris ♡';
+}
+.btn-favorite-A:hover::before{
+    content: 'Ajouter aux favoris ♥';
+}
+
+.error{
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 800px;
+    height: 250px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    font-size: 24px;
+    padding: 65px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.close-pop-up-here{
+    margin-top: 25px;
+    color: #cfddf4;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #24353E;
+    border: solid 1px #cfddf4;
+}
+.close-pop-up-here:hover{
+    color: #4f6f9b;
+    background-color: #1B262C;
+}
+
 /* Page Register & Login */
 .card-register{
     background-color: #24353E;
