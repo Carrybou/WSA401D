@@ -7,17 +7,29 @@ services:
     container_name: sae401_app
     restart: always
     volumes:
+      - ../001-sae401.conf:/etc/apache2/sites-enabled/
       - ./:/var/www/sae401/
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
     depends_on:
-      - db
+      - database
     ports:
       - "5151:80"
 
-  db:
-    image: mysql:5.7
-    platform: linux/amd64
+  consumer:
+    image: mmi3docker/symfony-2023
+    container_name: sae401_consumer
+    restart: always
+    volumes:
+      - ./:/var/www/sae401/
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+    depends_on:
+      - database
+    entrypoint: ["php", "bin/console", "messenger:consume", "async", "-vv"]
+
+  database:
+    image: mysql:8.0
     container_name: sae401_db
     restart: always
     environment:
@@ -36,13 +48,13 @@ services:
     container_name: sae401_phpmyadmin
     restart: always
     environment:
-      PMA_HOST: db
+      PMA_HOST: sae401_db
       PMA_USER: user
-      PMA_PASSWORD: pass
+      PMA_PASSWORD: password
     ports:
       - "5153:80"
     depends_on:
-      - db
+      - database
 
   maildev:
     image: maildev/maildev
@@ -75,7 +87,3 @@ services:
 
 volumes:
   db_data:
-
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###

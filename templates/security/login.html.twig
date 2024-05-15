@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="mb-3 logged">
+                <p>Vous êtes connecté avec l'adresse email {{ app.user.userIdentifier }}.</p>
+                <a href="{{ path('app_logout') }}" class="btn-deconnexion">Se déconnecter</a>
+            </div>
+
+            {# Préférence profil à mettre #}
+
+            {# FIN Préférence profil à mettre #}
+
+        {% else %}
+            <div class="card-register">
+                <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+
+                <div class="form-register">
+                    <div>
+                        <label for="username">Email</label>
+                        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <input type="hidden" name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}"
+                >
+
+                <button class="btn btn-lg btn-primary btn-login" type="submit">
+                    Se connecter
+                </button>
+
+                <p>Vous n'avez pas de compte ? <a href="/register" class="link-seco">S'inscrire</a></p>
+            </div>
+            
+        {% endif %}
+        
+    </form>
+{% endblock %}
