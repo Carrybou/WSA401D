@@ -14,6 +14,33 @@
         {% endblock %}
     </head>
     <body>
+        <header>
+            <img class="logo" src="https://cdn-icons-png.flaticon.com/512/6485/6485580.png" alt="Logo">
+
+            {% if app.user and (app.user.favoriteCity1 or app.user.favoriteCity2 or app.user.favoriteCity3) %}
+                <div class="villes-fav3">
+                    {% set favoriteCities = [app.user.favoriteCity1, app.user.favoriteCity2, app.user.favoriteCity3] %}
+                    {% for city in favoriteCities %}
+                        {% if city %}
+                            <form method="post" action="{{ path('weather_home') }}">
+                                <input type="hidden" name="city" value="{{ city }}">
+                                <button class="btn-fav-unit" type="submit">{{ city }}</button>
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if not app.user %}
+                <a href="{{ path('app_login') }}">
+                    <button class="btn-connexion-homepage">Connexion</button>
+                </a>
+            {% else %}
+                <a href="{{ path('app_logout') }}">
+                    <button class="btn-deconnexion-homepage">Déconnexion</button>
+                </a>
+            {% endif %}
+        </header>
         {% block body %}{% endblock %}
     </body>
 </html>
