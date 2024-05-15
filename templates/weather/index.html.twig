@@ -8,11 +8,13 @@
     <p>The current temperature is {{ temperature }}°C.</p>
 
     <h2>Temperature and Wind Speed Chart</h2>
-    <canvas id="weatherChart" width="500" height="500"></canvas>
+    <div class="chart-container">
+    <canvas id="weatherChart" width="800" height="500"></canvas>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('weatherChart').getContext('2d');
-        let delayed;
+        let delayed=false;
         const weatherChart = new Chart(ctx, {
             type: 'bar', // Default type
             data: {
@@ -59,6 +61,8 @@
                 }
             }
         });
+        weatherChart.resize();
+
     </script>
     <h2>5 Day / 3 Hour Forecast</h2>
     {% for forecast in forecast %}

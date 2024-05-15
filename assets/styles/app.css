@@ -159,8 +159,12 @@ button:hover::before,
 /*Graphique*/
 
 #weatherChart{
-    width: 500px;
+    width: 800px;
     height: 500px;
     background-color: #F5F5F5;
     padding: 30px;
+}
+.chart-container{
+    height: 500px;
+    width: 800px;
 }
