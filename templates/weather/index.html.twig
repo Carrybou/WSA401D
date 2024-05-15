@@ -35,14 +35,28 @@
         {% if weatherData is defined and weatherData[selectedCity] is defined %}
             <h1>Météo à {{ selectedCity }}</h1>
             <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
-            <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
-            <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
-            <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
-            <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
-            <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
-            <p>Description : {{ weatherData[selectedCity].description }}</p>
-            <img src="http://openweathermap.org/img/wn/{{ weatherData[selectedCity].icon }}@2x.png" alt="Weather icon">
-            
+            {% if weatherData[selectedCity].humidity is defined %}
+                <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
+            {% endif %}
+            {% if weatherData[selectedCity].pressure is defined %}
+                <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
+            {% endif %}
+            {% if weatherData[selectedCity].wind_speed is defined %}
+                <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
+            {% endif %}
+            {% if weatherData[selectedCity].wind_direction is defined %}
+                <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
+            {% endif %}
+            {% if weatherData[selectedCity].cloudiness is defined %}
+                <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
+            {% endif %}
+            {% if weatherData[selectedCity].description is defined %}
+                <p>Description : {{ weatherData[selectedCity].description }}</p>
+            {% endif %}
+            {% if weatherData[selectedCity].icon is defined %}
+                <img src="http://openweathermap.org/img/wn/{{ weatherData[selectedCity].icon }}@2x.png" alt="Weather icon">
+            {% endif %}
+
             <h2>Prévisions sur 5 jours / 3 heures</h2>
             <table class="table">
                 <thead>
