@@ -46,16 +46,20 @@ class WeatherController extends AbstractController
         if ($selectedCity) {
             try {
                 $data = $this->weatherService->getWeatherData($selectedCity);
-                $weatherData[$selectedCity] = [
-                    'temperature' => $data['main']['temp'],
-                    'forecast' => $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $selectedCity)['list'],
-                ];
+                if (isset($data['main']['temp'])) {
+                    $weatherData[$selectedCity] = [
+                        'temperature' => $data['main']['temp'],
+                        'forecast' => $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $selectedCity)['list'],
+                    ];
+                } else {
+                    throw new Exception("Invalid data received from the weather API.");
+                }
 
                 if ($user && $request->isMethod('post')) {
                     if ($favoriteAction === 'add') {
                         if (!in_array($selectedCity, $favoriteCities)) {
                             if (count($favoriteCities) >= 3) {
-                                $error = "Vous devez retirer une ville de vos favoris avant de pouvoir en ajouter une nouvelle.<a class='close-pop-up-here' href='#' id='close-error'>(Cliquer ici  pour fermer)</a>";
+                                $error = "Vous devez retirer une ville de vos favoris avant de pouvoir en ajouter une nouvelle. <a class='close-pop-up-here' href='#' id='close-error'>(Cliquer ici pour fermer)</a>";
                             } else {
                                 // Ajouter la ville aux favoris
                                 if (!$user->getFavoriteCity1()) {
@@ -81,7 +85,10 @@ class WeatherController extends AbstractController
                     }
                 }
             } catch (Exception $e) {
-                $error = "Une erreur s'est produite lors de la récupération des données météorologiques. Veuillez réessayer.";
+                if (!$weatherData) {
+                    // N'affiche l'erreur que s'il n'y a pas de données trouvées
+                    $error = "Une erreur s'est produite lors de la récupération des données météorologiques. Veuillez réessayer.";
+                }
             }
         }
 

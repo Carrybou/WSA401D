@@ -10,21 +10,22 @@
             <button class="search" type="submit">Rechercher</button>
         </form>
 
-        {% if selectedCity in favoriteCities %}
-            <form method="post" action="{{ path('weather_home') }}">
-                <input type="hidden" name="city" value="{{ selectedCity }}">
-                <input type="hidden" name="favorite_action" value="remove">
-                <button type="submit" class="btn-favorite btn-favorite-R">Retirer des favoris ♡</button>
-            </form>
-        {% else %}
-            <form method="post" action="{{ path('weather_home') }}">
-                <input type="hidden" name="city" value="{{ selectedCity }}">
-                <input type="hidden" name="favorite_action" value="add">
-                <button type="submit" class="btn-favorite btn-favorite-A">Ajouter aux favoris ♥</button>
-            </form>
+        {% if app.user %}
+            {% if selectedCity in favoriteCities %}
+                <form method="post" action="{{ path('weather_home') }}">
+                    <input type="hidden" name="city" value="{{ selectedCity }}">
+                    <input type="hidden" name="favorite_action" value="remove">
+                    <button type="submit" class="btn-favorite btn-favorite-R">Retirer des favoris ♡</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('weather_home') }}">
+                    <input type="hidden" name="city" value="{{ selectedCity }}">
+                    <input type="hidden" name="favorite_action" value="add">
+                    <button type="submit" class="btn-favorite btn-favorite-A">Ajouter aux favoris ♥</button>
+                </form>
+            {% endif %}
         {% endif %}
     </div>
-    
 
     {% if error %}
         <div class="error" id="error-message">{{ error|raw }}</div>
@@ -50,6 +51,27 @@
             if (errorMessage) {
                 errorMessage.addEventListener('click', function() {
                     errorMessage.style.display = 'none';
+                });
+            }
+
+            if (!"{{ selectedCity }}" && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
+                        .then(response => response.json())
+                        .then(data => {
+                            var city = data.city || data.locality || data.principalSubdivision;
+                            if (city) {
+                                document.getElementById('city').value = city;
+                                document.querySelector('.form-search').submit();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error retrieving location:', error);
+                        });
+                }, function(error) {
+                    console.error('Geolocation error:', error);
                 });
             }
         });
