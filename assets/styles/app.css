@@ -138,3 +138,18 @@ button:hover::before,
 .link-seco:hover{
     color: #638ea7;
 }
+
+.card-lost-mdp{
+    width: 500px;
+}
+
+.btn-lost-mdp::before{
+    content: "Envoyer l'email de réinitialisation du mot de passe";
+}
+.btn-lost-mdp{
+    margin-top: 20px;
+}
+
+.card-lost-mdp p{
+    text-align: center;
+}
