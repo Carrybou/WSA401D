@@ -1,3 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Viga&display=swap');
+
 body {
-    background-color: skyblue;
+    background-color: #1B262C;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Viga', sans-serif;
+}
+
+input{
+    background-color:#1F2D34;
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: 1px solid #ffffff64;
+    padding: 10px 5px 10px 5px;
+}
+
+button,
+.btn-deconnexion {
+    position: relative;
+    overflow: hidden;
+    background-image: linear-gradient(0.15turn, #3A5E72, #5C93B1);
+    color: #FFFFFF;
+    border-radius: 10px;
+    border: none;
+    padding: 15px 35px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    width: 100%;
+}
+
+button::before,
+.btn-deconnexion::before {
+    content: '';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(0.15turn, #5C93B1, #3A5E72);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-radius: 10px;
+}
+
+button:hover::before,
+.btn-deconnexion:hover::before {
+    opacity: 1;
+}
+
+/* Page Register & Login */
+.card-register{
+    background-color: #24353E;
+    border-radius: 10px;
+    padding: 0px 80px 40px 80px;
+    margin-top: 50px;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:25px;
+    
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.form-register{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-register div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.form-register div:nth-child(3){
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn-register::before{
+    content: 'S\'inscrire';
+}
+.btn-login::before{
+    content: "Se connecter";
+}
+
+.logged{
+    padding:25px;
+    margin: 0 auto;
+    width: 50%;
+    background-color: #24353E;
+    border-radius: 10px;*
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 130px;
+    text-align: center;
+}
+
+.btn-deconnexion::before{
+    content: 'Se déconnecter';
+}
+
+.btn-deconnexion{
+    position: absolute;
+    left: 50%;
+    bottom: 35px;
+    transform: translateX(-50%);
+    width: 200px;
+}
+
+.link-seco{
+    color: #95c9e7;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+.link-seco:hover{
+    color: #638ea7;
 }
