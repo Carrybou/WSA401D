@@ -58,20 +58,54 @@
             {% endif %}
 
             <h2>Prévisions sur 5 jours / 3 heures</h2>
-            <table class="table">
+
+            <div id="column-selectors">
+                <label><input type="checkbox" data-column="0" checked> Jour</label>
+                <label><input type="checkbox" data-column="1" checked> Heure</label>
+                <label><input type="checkbox" data-column="2" checked> Icon</label>
+                <label><input type="checkbox" data-column="3" checked> Temp. Min</label>
+                <label><input type="checkbox" data-column="4" checked> Temp. Max</label>
+                <label><input type="checkbox" data-column="5" checked> Temp. Actuelle</label>
+                <label><input type="checkbox" data-column="6" checked> Description</label>
+                <label><input type="checkbox" data-column="7" checked> Vitesse du vent</label>
+                <label><input type="checkbox" data-column="8" checked> Direction du vent</label>
+                <label><input type="checkbox" data-column="9" checked> Couverture nuageuse</label>
+                <label><input type="checkbox" data-column="10" checked> Humidité</label>
+                <label><input type="checkbox" data-column="11" checked> Pression</label>
+            </div>
+
+            <table class="table" id="forecast-table">
                 <thead>
                     <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Température</th>
+                        <th scope="col">Jour</th>
+                        <th scope="col">Heure</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Temp. Min</th>
+                        <th scope="col">Temp. Max</th>
+                        <th scope="col">Temp. Actuelle</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Vitesse du vent</th>
+                        <th scope="col">Direction du vent</th>
+                        <th scope="col">Couverture nuageuse</th>
+                        <th scope="col">Humidité</th>
+                        <th scope="col">Pression</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in weatherData[selectedCity].forecast %}
                         <tr>
-                            <td>{{ item.dt_txt }}</td>
-                            <td>{{ item.main.temp }} °C</td>
-                            <td>{{ item.weather[0].description }}</td>
+                            <td>{{ item.day_of_week }}</td>
+                            <td>{{ item.time }}</td>
+                            <td><img src="http://openweathermap.org/img/wn/{{ item.icon }}@2x.png" alt="Weather icon"></td>
+                            <td>{{ item.temp_min }} °C</td>
+                            <td>{{ item.temp_max }} °C</td>
+                            <td>{{ item.temp }} °C</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.wind_speed }} m/s</td>
+                            <td>{{ item.wind_direction }}°</td>
+                            <td>{{ item.cloudiness }}%</td>
+                            <td>{{ item.humidity }}%</td>
+                            <td>{{ item.pressure }} hPa</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -90,6 +124,50 @@
                     errorMessage.style.display = 'none';
                 });
             }
+
+            // Function to toggle columns
+            function toggleColumn(columnIndex, isVisible) {
+                var table = document.getElementById('forecast-table');
+                var rows = table.getElementsByTagName('tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = rows[i].getElementsByTagName('th').length ? rows[i].getElementsByTagName('th') : rows[i].getElementsByTagName('td');
+                    if (cells[columnIndex]) {
+                        cells[columnIndex].style.display = isVisible ? '' : 'none';
+                    }
+                }
+            }
+
+            // Set up event listeners for checkboxes
+            var checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
+            var columnPreferences = {{ columnPreferences|json_encode|raw }};
+
+            checkboxes.forEach(function(checkbox) {
+                var column = checkbox.dataset.column;
+                var isChecked = columnPreferences.length ? columnPreferences.indexOf(parseInt(column)) !== -1 : true;
+
+                checkbox.checked = isChecked;
+                toggleColumn(column, isChecked);
+
+                checkbox.addEventListener('change', function() {
+                    var preferences = [];
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            preferences.push(parseInt(checkbox.dataset.column));
+                        }
+                    });
+
+                    toggleColumn(this.dataset.column, this.checked);
+
+                    fetch('{{ path("save_column_preferences") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: JSON.stringify({ preferences: preferences })
+                    });
+                });
+            });
         });
     </script>
 {% endblock %}
