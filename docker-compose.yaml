@@ -3,6 +3,7 @@ version: '3.7'
 services:
   web:
     image: mmi3docker/symfony-2023
+    platform: linux/amd64
     container_name: sae401_app
     restart: always
     volumes:
@@ -16,6 +17,7 @@ services:
 
   db:
     image: mysql:5.7
+    platform: linux/amd64
     container_name: sae401_db
     restart: always
     environment:
@@ -30,6 +32,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
     container_name: sae401_phpmyadmin
     restart: always
     environment:
@@ -43,6 +46,7 @@ services:
 
   maildev:
     image: maildev/maildev
+    platform: linux/amd64
     container_name: symfony_maildev
     restart: always
     ports:
@@ -52,6 +56,7 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
+    platform: linux/amd64
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
       # You should definitely change the password in production
