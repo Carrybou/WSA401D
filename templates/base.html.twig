@@ -22,7 +22,7 @@
                     {% set favoriteCities = [app.user.favoriteCity1, app.user.favoriteCity2, app.user.favoriteCity3] %}
                     {% for city in favoriteCities %}
                         {% if city %}
-                            <form method="post" action="{{ path('weather_home') }}">
+                            <form method="get" action="{{ path('weather_home') }}">
                                 <input type="hidden" name="city" value="{{ city }}">
                                 <button class="btn-fav-unit" type="submit">{{ city }}</button>
                             </form>
