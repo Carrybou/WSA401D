@@ -7,7 +7,7 @@ services:
     container_name: sae401_app
     restart: always
     volumes:
-      - ./:/app
+      - ./:/var/www/sae401/
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
     depends_on:
