@@ -31,19 +31,42 @@
         <div class="error" id="error-message">{{ error|raw }}</div>
     {% endif %}
 
-    {% if weatherData is defined and weatherData[selectedCity] is defined %}
-        <h1>Météo à {{ selectedCity }}</h1>
-        <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
-        <h2>Prévisions sur 5 jours / 3 heures</h2>
-        {% for item in weatherData[selectedCity].forecast %}
-            <div>
-                <p>Date : {{ item.dt_txt }}</p>
-                <p>Météo : {{ item.weather[0].description }}</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>Pas de données météorologiques disponibles.</p>
-    {% endif %}
+    <div id="weather-info">
+        {% if weatherData is defined and weatherData[selectedCity] is defined %}
+            <h1>Météo à {{ selectedCity }}</h1>
+            <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
+            <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
+            <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
+            <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
+            <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
+            <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
+            <p>Description : {{ weatherData[selectedCity].description }}</p>
+            <img src="http://openweathermap.org/img/wn/{{ weatherData[selectedCity].icon }}@2x.png" alt="Weather icon">
+            
+            <h2>Prévisions sur 5 jours / 3 heures</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Température</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in weatherData[selectedCity].forecast %}
+                        <tr>
+                            <td>{{ item.dt_txt }}</td>
+                            <td>{{ item.main.temp }} °C</td>
+                            <td>{{ item.weather[0].description }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        {% else %}
+            <p>Pas de données météorologiques disponibles.</p>
+        {% endif %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -51,27 +74,6 @@
             if (errorMessage) {
                 errorMessage.addEventListener('click', function() {
                     errorMessage.style.display = 'none';
-                });
-            }
-
-            if (!"{{ selectedCity }}" && navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var lat = position.coords.latitude;
-                    var lon = position.coords.longitude;
-                    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
-                        .then(response => response.json())
-                        .then(data => {
-                            var city = data.city || data.locality || data.principalSubdivision;
-                            if (city) {
-                                document.getElementById('city').value = city;
-                                document.querySelector('.form-search').submit();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error retrieving location:', error);
-                        });
-                }, function(error) {
-                    console.error('Geolocation error:', error);
                 });
             }
         });

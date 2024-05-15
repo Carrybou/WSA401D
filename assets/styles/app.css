@@ -64,6 +64,13 @@ button:hover::before,
     opacity: 1;
 }
 
+tr{
+    background-color: #ad3c3c
+}
+td{
+    background-color: #25c222;
+}
+
 /* Base (Header) */
 header{
     display: flex;
