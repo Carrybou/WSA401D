@@ -2,17 +2,20 @@
 
 {% block title %}Météo{% endblock %}
 
-
 {% block body %}
-    <h1>Weather in {{ city }}</h1>
-    <p>The current temperature is {{ temperature }}°C.</p>
+    {# Formulaire de recherche pour rechercher une ville #}
 
-    <h2>5 Day / 3 Hour Forecast</h2>
-    {% for forecast in forecast %}
-        <div>
-            <h3>{{ forecast.dt_txt }}</h3>
-            <p>Temperature: {{ forecast.main.temp }}°C</p>
-            <p>Weather: {{ forecast.weather[0].description }}</p>
-        </div>
-    {% endfor %}
+    {% if weatherData is defined and weatherData[selectedCity] is defined %}
+        <h1>Weather in {{ selectedCity }}</h1>
+        <p>The current temperature is {{ weatherData[selectedCity].temperature }}°C.</p>
+        <h2>5 Day / 3 Hour Forecast</h2>
+        {% for item in weatherData[selectedCity].forecast %}
+            <div>
+                <p>Date: {{ item.dt_txt }}</p>
+                <p>Weather: {{ item.weather[0].description }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No weather data available.</p>
+    {% endif %}
 {% endblock %}

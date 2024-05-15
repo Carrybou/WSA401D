@@ -37,6 +37,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(type: "string", length: 250, nullable: true)]
+    private ?string $favoriteCity1 = null;
+
+    #[ORM\Column(type: "string", length: 250, nullable: true)]
+    private ?string $favoriteCity2 = null;
+
+    #[ORM\Column(type: "string", length: 250, nullable: true)]
+    private ?string $favoriteCity3 = null;
+
+    public function getFavoriteCity1(): ?string
+    {
+        return $this->favoriteCity1;
+    }
+
+    public function setFavoriteCity1(?string $favoriteCity1): static
+    {
+        $this->favoriteCity1 = $favoriteCity1;
+
+        return $this;
+    }
+
+    public function getFavoriteCity2(): ?string
+    {
+        return $this->favoriteCity2;
+    }
+
+    public function setFavoriteCity2(?string $favoriteCity2): static
+    {
+        $this->favoriteCity2 = $favoriteCity2;
+
+        return $this;
+    }
+
+    public function getFavoriteCity3(): ?string
+    {
+        return $this->favoriteCity3;
+    }
+
+    public function setFavoriteCity3(?string $favoriteCity3): static
+    {
+        $this->favoriteCity3 = $favoriteCity3;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
