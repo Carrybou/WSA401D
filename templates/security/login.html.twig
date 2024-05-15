@@ -9,34 +9,41 @@
         {% endif %}
 
         {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            <div class="mb-3 logged">
+                <p>Vous êtes connecté avec l'adresse email {{ app.user.userIdentifier }}.</p>
+                <a href="{{ path('app_logout') }}" class="btn-deconnexion">Se déconnecter</a>
             </div>
+
+            {# Préférence profil à mettre #}
+
+            {# FIN Préférence profil à mettre #}
+
+        {% else %}
+            <div class="card-register">
+                <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+
+                <div class="form-register">
+                    <div>
+                        <label for="username">Email</label>
+                        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <input type="hidden" name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}"
+                >
+
+                <button class="btn btn-lg btn-primary btn-login" type="submit">
+                    Se connecter
+                </button>
+
+                <p>Vous n'avez pas de compte ? <a href="/register" class="link-seco">S'inscrire</a></p>
+            </div>
+            
         {% endif %}
-
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" name="_remember_me"> Remember me
-                </label>
-            </div>
-        #}
-
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
+        
     </form>
 {% endblock %}
