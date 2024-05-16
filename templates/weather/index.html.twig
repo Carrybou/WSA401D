@@ -228,12 +228,4 @@
         weatherChart.resize();
 
     </script>
-    <h2>5 Day / 3 Hour Forecast</h2>
-    {% for forecast in forecast %}
-        <div>
-            <h3>{{ forecast.dt_txt }}</h3>
-            <p>Temperature: {{ forecast.main.temp }}°C</p>
-            <p>Weather: {{ forecast.weather[0].description }}</p>
-        </div>
-    {% endfor %}
 {% endblock %}
