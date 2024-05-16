@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Service\WeatherService;
@@ -29,24 +28,14 @@ class WeatherController extends AbstractController
     #[Route('/', name: 'weather_home')]
     public function index(Request $request): Response
     {
-        $city = 'Paris';
-        $weatherData = $this->weatherService->getWeatherData($city);
-        $temperature = $weatherData['main']['temp'];
-
-        $lat = $weatherData['coord']['lat'];
-        $lon = $weatherData['coord']['lon'];
-        $forecastData = $this->weatherService->getForecastData($lat, $lon,$city);
-        $forecast = $forecastData['list'];
-
-
+        $defaultCities = ['Paris', 'Berlin', 'New York', 'Moscou', 'Tokyo', 'Sydney'];
         $weatherData = [];
         $error = null;
-        $favoriteCities = ['London']; // Default city if no user is logged in or no favorite cities are set.
+        $favoriteCities = ['London'];
         $selectedCity = $request->query->get('city') ?: $request->request->get('city');
         $favoriteAction = $request->request->get('favorite_action');
         $columnPreferences = [];
-
-
+        $forecast = [];
 
         $token = $this->tokenStorage->getToken();
         if ($token && $user = $token->getUser()) {
@@ -54,7 +43,7 @@ class WeatherController extends AbstractController
                 $user->getFavoriteCity1(),
                 $user->getFavoriteCity2(),
                 $user->getFavoriteCity3(),
-            ]); // Remove any null entries.
+            ]);
             $columnPreferences = $user->getColumnPreferences() ?: [];
         }
 
@@ -64,7 +53,6 @@ class WeatherController extends AbstractController
                 if (isset($data['main']['temp'])) {
                     $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $selectedCity)['list'];
 
-                    // Adding the new data structure
                     $weatherData[$selectedCity] = [
                         'temperature' => $data['main']['temp'],
                         'humidity' => $data['main']['humidity'],
@@ -91,6 +79,9 @@ class WeatherController extends AbstractController
                             ];
                         }, $forecastData)
                     ];
+
+                    // Assign the forecast data for chart generation
+                    $forecast = $forecastData;
                 } else {
                     throw new Exception("Invalid data received from the weather API.");
                 }
@@ -101,7 +92,6 @@ class WeatherController extends AbstractController
                             if (count($favoriteCities) >= 3) {
                                 $error = "Vous devez retirer une ville de vos favoris avant de pouvoir en ajouter une nouvelle. <a class='close-pop-up-here' href='#' id='close-error'>(Cliquer ici pour fermer)</a>";
                             } else {
-                                // Ajouter la ville aux favoris
                                 if (!$user->getFavoriteCity1()) {
                                     $user->setFavoriteCity1($selectedCity);
                                 } elseif (!$user->getFavoriteCity2()) {
@@ -113,7 +103,6 @@ class WeatherController extends AbstractController
                             }
                         }
                     } elseif ($favoriteAction === 'remove') {
-                        // Retirer la ville des favoris
                         if ($user->getFavoriteCity1() === $selectedCity) {
                             $user->setFavoriteCity1(null);
                         } elseif ($user->getFavoriteCity2() === $selectedCity) {
@@ -126,15 +115,53 @@ class WeatherController extends AbstractController
                 }
             } catch (Exception $e) {
                 if (!$weatherData) {
-                    // N'affiche l'erreur que s'il n'y a pas de données trouvées
                     $error = "Une erreur s'est produite lors de la récupération des données météorologiques. Veuillez réessayer.";
                 }
             }
         }
 
+        if (!$selectedCity || !$weatherData) {
+            foreach ($defaultCities as $city) {
+                $data = $this->weatherService->getWeatherData($city);
+                if (isset($data['main']['temp'])) {
+                    $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $city)['list'];
+
+                    $weatherData[$city] = [
+                        'temperature' => $data['main']['temp'],
+                        'humidity' => $data['main']['humidity'],
+                        'pressure' => $data['main']['pressure'],
+                        'wind_speed' => $data['wind']['speed'],
+                        'wind_direction' => $data['wind']['deg'],
+                        'cloudiness' => $data['clouds']['all'],
+                        'description' => $data['weather'][0]['description'],
+                        'icon' => $data['weather'][0]['icon'],
+                        'forecast' => array_map(function($item) {
+                            return [
+                                'day_of_week' => (new \DateTime($item['dt_txt']))->format('l'),
+                                'time' => (new \DateTime($item['dt_txt']))->format('H:i'),
+                                'icon' => $item['weather'][0]['icon'],
+                                'temp_min' => $item['main']['temp_min'],
+                                'temp_max' => $item['main']['temp_max'],
+                                'temp' => $item['main']['temp'],
+                                'description' => $item['weather'][0]['description'],
+                                'wind_speed' => $item['wind']['speed'],
+                                'wind_direction' => $item['wind']['deg'],
+                                'cloudiness' => $item['clouds']['all'],
+                                'humidity' => $item['main']['humidity'],
+                                'pressure' => $item['main']['pressure']
+                            ];
+                        }, $forecastData)
+                    ];
+
+                    // Assign forecast data for chart generation
+                    $forecast = $forecastData;
+                }
+            }
+        }
+
+        // Ensure $forecastNext24Hours is defined correctly
         $now = time();
         $next24Hours = $now + 24 * 60 * 60;
-
         $forecastNext24Hours = array_filter($forecast, function ($entry) use ($now, $next24Hours) {
             $forecastTime = strtotime($entry['dt_txt']);
             return $forecastTime >= $now && $forecastTime <= $next24Hours;
@@ -152,9 +179,6 @@ class WeatherController extends AbstractController
             'weatherData' => $weatherData,
             'error' => $error,
             'columnPreferences' => $columnPreferences,
-            'city' => $city,
-            'temperature' => $temperature,
-            'forecast' => $forecast,
             'chartData' => $chartData
         ]);
     }
