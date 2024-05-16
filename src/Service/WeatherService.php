@@ -5,14 +5,12 @@ namespace App\Service;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Cocur\Slugify\Slugify;
 
-
 class WeatherService
 {
     private $httpClient;
     private $apiKey;
     private $cacheDir;
     private $slugify;
-
 
     public function __construct(HttpClientInterface $httpClient, string $apiKey, string $projectDir)
     {
@@ -38,6 +36,7 @@ class WeatherService
                     'q' => $city,
                     'units' => 'metric',
                     'appid' => $this->apiKey,
+                    'lang' => 'fr',
                 ]
             ]);
 
@@ -48,7 +47,8 @@ class WeatherService
 
         return $data;
     }
-    public function getForecastData(float $lat, float $lon,string $city): array
+
+    public function getForecastData(float $lat, float $lon, string $city): array
     {
         $citySlug = $this->slugify->slugify($city);
         $cacheFile = $this->cacheDir . '/' . $citySlug . '_forecast.json';
@@ -65,6 +65,7 @@ class WeatherService
                     'lon' => $lon,
                     'units' => 'metric',
                     'appid' => $this->apiKey,
+                    'lang' => 'fr',
                 ]
             ]);
 

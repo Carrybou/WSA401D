@@ -46,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 250, nullable: true)]
     private ?string $favoriteCity3 = null;
 
+    #[ORM\Column(type: "json", nullable: true)]
+    private ?array $columnPreferences = null;
+
     public function getFavoriteCity1(): ?string
     {
         return $this->favoriteCity1;
@@ -78,6 +81,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFavoriteCity3(?string $favoriteCity3): static
     {
         $this->favoriteCity3 = $favoriteCity3;
+
+        return $this;
+    }
+
+    public function getColumnPreferences(): ?array
+    {
+        return $this->columnPreferences;
+    }
+
+    public function setColumnPreferences(?array $columnPreferences): static
+    {
+        $this->columnPreferences = $columnPreferences;
 
         return $this;
     }

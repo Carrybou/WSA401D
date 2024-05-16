@@ -31,19 +31,90 @@
         <div class="error" id="error-message">{{ error|raw }}</div>
     {% endif %}
 
-    {% if weatherData is defined and weatherData[selectedCity] is defined %}
-        <h1>Météo à {{ selectedCity }}</h1>
-        <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
-        <h2>Prévisions sur 5 jours / 3 heures</h2>
-        {% for item in weatherData[selectedCity].forecast %}
-            <div>
-                <p>Date : {{ item.dt_txt }}</p>
-                <p>Météo : {{ item.weather[0].description }}</p>
+    <div id="weather-info">
+        {% if weatherData is defined and weatherData[selectedCity] is defined %}
+            <h1>Météo à {{ selectedCity }}</h1>
+            <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
+            {% if weatherData[selectedCity].humidity is defined %}
+                <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
+            {% endif %}
+            {% if weatherData[selectedCity].pressure is defined %}
+                <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
+            {% endif %}
+            {% if weatherData[selectedCity].wind_speed is defined %}
+                <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
+            {% endif %}
+            {% if weatherData[selectedCity].wind_direction is defined %}
+                <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
+            {% endif %}
+            {% if weatherData[selectedCity].cloudiness is defined %}
+                <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
+            {% endif %}
+            {% if weatherData[selectedCity].description is defined %}
+                <p>Description : {{ weatherData[selectedCity].description }}</p>
+            {% endif %}
+            {% if weatherData[selectedCity].icon is defined %}
+                <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
+            {% endif %}
+
+            <h2>Prévisions sur 5 jours / 3 heures</h2>
+
+            <div id="column-selectors" class="filtres-tab">
+                <label><input type="checkbox" data-column="0" checked> Jour</label>
+                <label><input type="checkbox" data-column="1" checked> Heure</label>
+                <label><input type="checkbox" data-column="2" checked> Icon</label>
+                <label><input type="checkbox" data-column="3" checked> Temp. Min</label>
+                <label><input type="checkbox" data-column="4" checked> Temp. Max</label>
+                <label><input type="checkbox" data-column="5" checked> Temp. Actuelle</label>
+                <label><input type="checkbox" data-column="6" checked> Description</label>
+                <label><input type="checkbox" data-column="7" checked> Vitesse du vent</label>
+                <label><input type="checkbox" data-column="8" checked> Direction du vent</label>
+                <label><input type="checkbox" data-column="9" checked> Couverture nuageuse</label>
+                <label><input type="checkbox" data-column="10" checked> Humidité</label>
+                <label><input type="checkbox" data-column="11" checked> Pression</label>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>Pas de données météorologiques disponibles.</p>
-    {% endif %}
+
+            <table class="table" id="forecast-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Jour</th>
+                        <th scope="col">Heure</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Temp. Min</th>
+                        <th scope="col">Temp. Max</th>
+                        <th scope="col">Temp. Actuelle</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Vitesse du vent</th>
+                        <th scope="col">Direction du vent</th>
+                        <th scope="col">Couverture nuageuse</th>
+                        <th scope="col">Humidité</th>
+                        <th scope="col">Pression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in weatherData[selectedCity].forecast %}
+                        <tr>
+                            <td>{{ item.day_of_week }}</td>
+                            <td>{{ item.time }}</td>
+                            <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ item.icon ~ '.png') }}" alt="Weather icon"></td>
+                            <td>{{ item.temp_min }} °C</td>
+                            <td>{{ item.temp_max }} °C</td>
+                            <td>{{ item.temp }} °C</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.wind_speed }} m/s</td>
+                            <td>{{ item.wind_direction }}°</td>
+                            <td>{{ item.cloudiness }}%</td>
+                            <td>{{ item.humidity }}%</td>
+                            <td>{{ item.pressure }} hPa</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        {% else %}
+            <p>Pas de données météorologiques disponibles.</p>
+        {% endif %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -54,26 +125,49 @@
                 });
             }
 
-            if (!"{{ selectedCity }}" && navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var lat = position.coords.latitude;
-                    var lon = position.coords.longitude;
-                    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
-                        .then(response => response.json())
-                        .then(data => {
-                            var city = data.city || data.locality || data.principalSubdivision;
-                            if (city) {
-                                document.getElementById('city').value = city;
-                                document.querySelector('.form-search').submit();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error retrieving location:', error);
-                        });
-                }, function(error) {
-                    console.error('Geolocation error:', error);
-                });
+            // Function to toggle columns
+            function toggleColumn(columnIndex, isVisible) {
+                var table = document.getElementById('forecast-table');
+                var rows = table.getElementsByTagName('tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = rows[i].getElementsByTagName('th').length ? rows[i].getElementsByTagName('th') : rows[i].getElementsByTagName('td');
+                    if (cells[columnIndex]) {
+                        cells[columnIndex].style.display = isVisible ? '' : 'none';
+                    }
+                }
             }
+
+            // Set up event listeners for checkboxes
+            var checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
+            var columnPreferences = {{ columnPreferences|json_encode|raw }};
+
+            checkboxes.forEach(function(checkbox) {
+                var column = checkbox.dataset.column;
+                var isChecked = columnPreferences.length ? columnPreferences.indexOf(parseInt(column)) !== -1 : true;
+
+                checkbox.checked = isChecked;
+                toggleColumn(column, isChecked);
+
+                checkbox.addEventListener('change', function() {
+                    var preferences = [];
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            preferences.push(parseInt(checkbox.dataset.column));
+                        }
+                    });
+
+                    toggleColumn(this.dataset.column, this.checked);
+
+                    fetch('{{ path("save_column_preferences") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: JSON.stringify({ preferences: preferences })
+                    });
+                });
+            });
         });
     </script>
 {% endblock %}
