@@ -31,7 +31,7 @@ class WeatherController extends AbstractController
         $defaultCities = ['Paris', 'Berlin', 'New York', 'Moscou', 'Tokyo', 'Sydney'];
         $weatherData = [];
         $error = null;
-        $favoriteCities = ['London'];
+        $favoriteCities = [];
         $selectedCity = $request->query->get('city') ?: $request->request->get('city');
         $favoriteAction = $request->request->get('favorite_action');
         $columnPreferences = [];
@@ -172,6 +172,43 @@ class WeatherController extends AbstractController
             'temperature' => array_map(function ($entry) { return $entry['main']['temp']; }, $forecastNext24Hours),
             'windSpeed' => array_map(function ($entry) { return $entry['wind']['speed']; }, $forecastNext24Hours)
         ];
+
+        // Fetch weather data for favorite cities
+        foreach ($favoriteCities as $city) {
+            if (!isset($weatherData[$city])) {
+                $data = $this->weatherService->getWeatherData($city);
+                if (isset($data['main']['temp'])) {
+                    $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $city)['list'];
+
+                    $weatherData[$city] = [
+                        'temperature' => $data['main']['temp'],
+                        'humidity' => $data['main']['humidity'],
+                        'pressure' => $data['main']['pressure'],
+                        'wind_speed' => $data['wind']['speed'],
+                        'wind_direction' => $data['wind']['deg'],
+                        'cloudiness' => $data['clouds']['all'],
+                        'description' => $data['weather'][0]['description'],
+                        'icon' => $data['weather'][0]['icon'],
+                        'forecast' => array_map(function($item) {
+                            return [
+                                'day_of_week' => (new \DateTime($item['dt_txt']))->format('l'),
+                                'time' => (new \DateTime($item['dt_txt']))->format('H:i'),
+                                'icon' => $item['weather'][0]['icon'],
+                                'temp_min' => $item['main']['temp_min'],
+                                'temp_max' => $item['main']['temp_max'],
+                                'temp' => $item['main']['temp'],
+                                'description' => $item['weather'][0]['description'],
+                                'wind_speed' => $item['wind']['speed'],
+                                'wind_direction' => $item['wind']['deg'],
+                                'cloudiness' => $item['clouds']['all'],
+                                'humidity' => $item['main']['humidity'],
+                                'pressure' => $item['main']['pressure']
+                            ];
+                        }, $forecastData)
+                    ];
+                }
+            }
+        }
 
         return $this->render('weather/index.html.twig', [
             'favoriteCities' => $favoriteCities,

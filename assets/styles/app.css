@@ -222,7 +222,8 @@ header{
 }
 
 /* Default cities */
-.default-cities{
+.default-cities,
+.favorite-cities{
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -255,6 +256,12 @@ header{
     top: -50px;
     right: -50px;
     width: 250px;
+}
+
+.other-city{
+    text-align: center;
+    margin-top:120px;
+    font-size: 27px;
 }
 
 /* Page Register & Login */
