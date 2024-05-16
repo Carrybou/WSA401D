@@ -10,39 +10,135 @@
             <button class="search" type="submit">Rechercher</button>
         </form>
 
-        {% if selectedCity in favoriteCities %}
-            <form method="post" action="{{ path('weather_home') }}">
-                <input type="hidden" name="city" value="{{ selectedCity }}">
-                <input type="hidden" name="favorite_action" value="remove">
-                <button type="submit" class="btn-favorite btn-favorite-R">Retirer des favoris ♡</button>
-            </form>
-        {% else %}
-            <form method="post" action="{{ path('weather_home') }}">
-                <input type="hidden" name="city" value="{{ selectedCity }}">
-                <input type="hidden" name="favorite_action" value="add">
-                <button type="submit" class="btn-favorite btn-favorite-A">Ajouter aux favoris ♥</button>
-            </form>
+        {% if app.user %}
+            {% if selectedCity in favoriteCities %}
+                <form method="post" action="{{ path('weather_home') }}">
+                    <input type="hidden" name="city" value="{{ selectedCity }}">
+                    <input type="hidden" name="favorite_action" value="remove">
+                    <button type="submit" class="btn-favorite btn-favorite-R">Retirer des favoris ♡</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('weather_home') }}">
+                    <input type="hidden" name="city" value="{{ selectedCity }}">
+                    <input type="hidden" name="favorite_action" value="add">
+                    <button type="submit" class="btn-favorite btn-favorite-A">Ajouter aux favoris ♥</button>
+                </form>
+            {% endif %}
         {% endif %}
     </div>
-    
 
     {% if error %}
         <div class="error" id="error-message">{{ error|raw }}</div>
     {% endif %}
 
-    {% if weatherData is defined and weatherData[selectedCity] is defined %}
-        <h1>Météo à {{ selectedCity }}</h1>
-        <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
-        <h2>Prévisions sur 5 jours / 3 heures</h2>
-        {% for item in weatherData[selectedCity].forecast %}
-            <div>
-                <p>Date : {{ item.dt_txt }}</p>
-                <p>Météo : {{ item.weather[0].description }}</p>
+    <div id="weather-info">
+        {% if weatherData[selectedCity] is defined %}
+            <h1>Météo à {{ selectedCity }}</h1>
+            <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
+            {% if weatherData[selectedCity].humidity is defined %}
+                <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
+            {% endif %}
+            {% if weatherData[selectedCity].pressure is defined %}
+                <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
+            {% endif %}
+            {% if weatherData[selectedCity].wind_speed is defined %}
+                <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
+            {% endif %}
+            {% if weatherData[selectedCity].wind_direction is defined %}
+                <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
+            {% endif %}
+            {% if weatherData[selectedCity].cloudiness is defined %}
+                <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
+            {% endif %}
+            {% if weatherData[selectedCity].description is defined %}
+                <p>Description : {{ weatherData[selectedCity].description }}</p>
+            {% endif %}
+            {% if weatherData[selectedCity].icon is defined %}
+                <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
+            {% endif %}
+
+            <h2>Prévisions sur 5 jours / 3 heures</h2>
+
+            <div id="column-selectors" class="filtres-tab">
+                <label><input type="checkbox" data-column="0" checked> Jour</label>
+                <label><input type="checkbox" data-column="1" checked> Heure</label>
+                <label><input type="checkbox" data-column="2" checked> Icon</label>
+                <label><input type="checkbox" data-column="3" checked> Temp. Min</label>
+                <label><input type="checkbox" data-column="4" checked> Temp. Max</label>
+                <label><input type="checkbox" data-column="5" checked> Temp. Actuelle</label>
+                <label><input type="checkbox" data-column="6" checked> Description</label>
+                <label><input type="checkbox" data-column="7" checked> Vitesse du vent</label>
+                <label><input type="checkbox" data-column="8" checked> Direction du vent</label>
+                <label><input type="checkbox" data-column="9" checked> Couverture nuageuse</label>
+                <label><input type="checkbox" data-column="10" checked> Humidité</label>
+                <label><input type="checkbox" data-column="11" checked> Pression</label>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>Pas de données météorologiques disponibles.</p>
-    {% endif %}
+
+            <table class="table" id="forecast-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Jour</th>
+                        <th scope="col">Heure</th>
+                        <th scope="col">Icon</th>
+                        <th scope="col">Temp. Min</th>
+                        <th scope="col">Temp. Max</th>
+                        <th scope="col">Temp. Actuelle</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Vitesse du vent</th>
+                        <th scope="col">Direction du vent</th>
+                        <th scope="col">Couverture nuageuse</th>
+                        <th scope="col">Humidité</th>
+                        <th scope="col">Pression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in weatherData[selectedCity].forecast %}
+                        <tr>
+                            <td>{{ item.day_of_week }}</td>
+                            <td>{{ item.time }}</td>
+                            <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ item.icon ~ '.png') }}" alt="Weather icon"></td>
+                            <td>{{ item.temp_min }} °C</td>
+                            <td>{{ item.temp_max }} °C</td>
+                            <td>{{ item.temp }} °C</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.wind_speed }} m/s</td>
+                            <td>{{ item.wind_direction }}°</td>
+                            <td>{{ item.cloudiness }}%</td>
+                            <td>{{ item.humidity }}%</td>
+                            <td>{{ item.pressure }} hPa</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            {# Si aucunes recherche soumise retirer l'erreur "Pas de données météorologiques disponibles pour {{ selectedCity }}." #}
+            {% if not error %}
+                <p>Entrez une ville pour obtenir des données météorologiques.</p>
+            {% endif %}
+            {# <p>Pas de données météorologiques disponibles pour {{ selectedCity }}.</p> #}
+            <div class="default-cities">
+                {% for city, data in weatherData %}
+                    <div class="weather-card">
+                        <h3>{{ city }}</h3>
+                        <p>Température : {{ data.temperature }}°C</p>
+                        {% if data.humidity is defined %}
+                            <p>Humidité : {{ data.humidity }}%</p>
+                        {% endif %}
+                        {% if data.pressure is defined %}
+                            <p>Pression : {{ data.pressure }} hPa</p>
+                        {% endif %}
+                        {% if data.description is defined %}
+                            <p>Description : {{ data.description }}</p>
+                        {% endif %}
+                        {% if data.icon is defined %}
+                            <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endif %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -52,6 +148,105 @@
                     errorMessage.style.display = 'none';
                 });
             }
+
+            function toggleColumn(columnIndex, isVisible) {
+                var table = document.getElementById('forecast-table');
+                var rows = table.getElementsByTagName('tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = rows[i].getElementsByTagName('th').length ? rows[i].getElementsByTagName('th') : rows[i].getElementsByTagName('td');
+                    if (cells[columnIndex]) {
+                        cells[columnIndex].style.display = isVisible ? '' : 'none';
+                    }
+                }
+            }
+
+            var checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
+            var columnPreferences = {{ columnPreferences|json_encode|raw }};
+
+            checkboxes.forEach(function(checkbox) {
+                var column = checkbox.dataset.column;
+                var isChecked = columnPreferences.length ? columnPreferences.indexOf(parseInt(column)) !== -1 : true;
+
+                checkbox.checked = isChecked;
+                toggleColumn(column, isChecked);
+
+                checkbox.addEventListener('change', function() {
+                    var preferences = [];
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            preferences.push(parseInt(checkbox.dataset.column));
+                        }
+                    });
+
+                    toggleColumn(this.dataset.column, this.checked);
+
+                    fetch('{{ path("save_column_preferences") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: JSON.stringify({ preferences: preferences })
+                    });
+                });
+            });
         });
+    </script>
+
+    <h2>Temperature and Wind Speed Chart</h2>
+    <div class="chart-container">
+        <canvas id="weatherChart" width="800" height="500"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        let delayed = false;
+        const weatherChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ chartData.labels|json_encode|raw }},
+                datasets: [{
+                    type: 'line',
+                    label: 'Température',
+                    data: {{ chartData.temperature|json_encode|raw }},
+                    borderColor: 'red',
+                    fill: false,
+                    yAxisID: 'temp',
+                }, {
+                    label: 'Vitesse du vent',
+                    data: {{ chartData.windSpeed|json_encode|raw }},
+                    borderColor: 'blue',
+                    yAxisID: 'wind',
+                }]
+            },
+            options: {
+                animation: {
+                    onComplete: () => {
+                        delayed = true;
+                    },
+                    delay: (context) => {
+                        let delay = 0;
+                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                        }
+                        return delay;
+                    },
+                },
+                scales: {
+                    temp: {
+                        type: 'linear',
+                        position: 'left',
+                    },
+                    wind: {
+                        type: 'linear',
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    }
+                }
+            }
+        });
+        weatherChart.resize();
     </script>
 {% endblock %}

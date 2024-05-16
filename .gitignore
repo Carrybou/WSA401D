@@ -39,3 +39,5 @@ docker-compose.yaml
 composer.lock
 symfony.lock
 Dockerfile
+
+/public/data
