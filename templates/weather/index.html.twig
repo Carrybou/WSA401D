@@ -2,7 +2,6 @@
 
 {% block title %}Météo{% endblock %}
 
-
 {% block body %}
     <div class="pre-info-btn">
         <form class="form-search" method="post" action="{{ path('weather_home') }}">
@@ -33,7 +32,7 @@
     {% endif %}
 
     <div id="weather-info">
-        {% if weatherData is defined and weatherData[selectedCity] is defined %}
+        {% if weatherData[selectedCity] is defined %}
             <h1>Météo à {{ selectedCity }}</h1>
             <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
             {% if weatherData[selectedCity].humidity is defined %}
@@ -111,9 +110,33 @@
                     {% endfor %}
                 </tbody>
             </table>
-
         {% else %}
-            <p>Pas de données météorologiques disponibles.</p>
+            {# Si aucunes recherche soumise retirer l'erreur "Pas de données météorologiques disponibles pour {{ selectedCity }}." #}
+            {% if not error %}
+                <p>Entrez une ville pour obtenir des données météorologiques.</p>
+            {% endif %}
+            {# <p>Pas de données météorologiques disponibles pour {{ selectedCity }}.</p> #}
+            <div class="default-cities">
+                {% for city, data in weatherData %}
+                    <div class="weather-card">
+                        <h3>{{ city }}</h3>
+                        <p>Température : {{ data.temperature }}°C</p>
+                        {% if data.humidity is defined %}
+                            <p>Humidité : {{ data.humidity }}%</p>
+                        {% endif %}
+                        {% if data.pressure is defined %}
+                            <p>Pression : {{ data.pressure }} hPa</p>
+                        {% endif %}
+                        {% if data.description is defined %}
+                            <p>Description : {{ data.description }}</p>
+                        {% endif %}
+                        {% if data.icon is defined %}
+                            <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
         {% endif %}
     </div>
 
@@ -126,7 +149,6 @@
                 });
             }
 
-            // Function to toggle columns
             function toggleColumn(columnIndex, isVisible) {
                 var table = document.getElementById('forecast-table');
                 var rows = table.getElementsByTagName('tr');
@@ -138,7 +160,6 @@
                 }
             }
 
-            // Set up event listeners for checkboxes
             var checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
             var columnPreferences = {{ columnPreferences|json_encode|raw }};
 
@@ -171,20 +192,21 @@
             });
         });
     </script>
+
     <h2>Temperature and Wind Speed Chart</h2>
     <div class="chart-container">
-    <canvas id="weatherChart" width="800" height="500"></canvas>
+        <canvas id="weatherChart" width="800" height="500"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('weatherChart').getContext('2d');
-        let delayed=false;
+        let delayed = false;
         const weatherChart = new Chart(ctx, {
-            type: 'bar', // Default type
+            type: 'bar',
             data: {
                 labels: {{ chartData.labels|json_encode|raw }},
                 datasets: [{
-                    type: 'line', // Override the default type for this dataset
+                    type: 'line',
                     label: 'Température',
                     data: {{ chartData.temperature|json_encode|raw }},
                     borderColor: 'red',
@@ -226,6 +248,5 @@
             }
         });
         weatherChart.resize();
-
     </script>
 {% endblock %}
