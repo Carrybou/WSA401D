@@ -40,4 +40,4 @@ composer.lock
 symfony.lock
 Dockerfile
 
-/public/data
+/public/data/*.json
