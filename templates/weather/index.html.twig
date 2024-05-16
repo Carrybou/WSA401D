@@ -115,30 +115,39 @@
                 <p>Entrez une ville pour obtenir des données météorologiques.</p>
             {% endif %}
             
-            <div class="favorite-cities">
-                {% for city in favoriteCities %}
-                    {% if weatherData[city] is defined %}
-                        <div class="weather-card">
-                            <h3>{{ city }}</h3>
-                            <p>Température : {{ weatherData[city].temperature }}°C</p>
-                            {% if weatherData[city].humidity is defined %}
-                                <p>Humidité : {{ weatherData[city].humidity }}%</p>
-                            {% endif %}
-                            {% if weatherData[city].pressure is defined %}
-                                <p>Pression : {{ weatherData[city].pressure }} hPa</p>
-                            {% endif %}
-                            {% if weatherData[city].description is defined %}
-                                <p>Description : {{ weatherData[city].description }}</p>
-                            {% endif %}
-                            {% if weatherData[city].icon is defined %}
-                                <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ weatherData[city].icon ~ '.png') }}" alt="Weather icon">
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+            {# Si on est connecté #}
+            {% if app.user %}
+                <h3 class="other-city">Villes favorites</h3>
+                <div class="favorite-cities">
+                    {% for city in favoriteCities %}
+                        {% if weatherData[city] is defined %}
+                            <div class="weather-card">
+                                <h3>{{ city }}</h3>
+                                <p>Température : {{ weatherData[city].temperature }}°C</p>
+                                {% if weatherData[city].humidity is defined %}
+                                    <p>Humidité : {{ weatherData[city].humidity }}%</p>
+                                {% endif %}
+                                {% if weatherData[city].pressure is defined %}
+                                    <p>Pression : {{ weatherData[city].pressure }} hPa</p>
+                                {% endif %}
+                                {% if weatherData[city].description is defined %}
+                                    <p>Description : {{ weatherData[city].description }}</p>
+                                {% endif %}
+                                {% if weatherData[city].icon is defined %}
+                                    <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ weatherData[city].icon ~ '.png') }}" alt="Weather icon">
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
             
-            <h3 class="other-city">D'autres villes du monde</h3>
+            {# Si on est connecté #}
+            {% if app.user %}
+                <h3 class="other-city">D'autres villes du monde</h3>
+            {% else %}
+                <h3 class="other-city">Météo villes du monde</h3>
+            {% endif %}
             <div class="default-cities">
                 {% for city, data in weatherData %}
                     {% if city not in favoriteCities %}
