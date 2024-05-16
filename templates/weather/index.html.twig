@@ -121,22 +121,24 @@
                 <div class="favorite-cities">
                     {% for city in favoriteCities %}
                         {% if weatherData[city] is defined %}
-                            <div class="weather-card">
-                                <h3>{{ city }}</h3>
-                                <p>Température : {{ weatherData[city].temperature }}°C</p>
-                                {% if weatherData[city].humidity is defined %}
-                                    <p>Humidité : {{ weatherData[city].humidity }}%</p>
-                                {% endif %}
-                                {% if weatherData[city].pressure is defined %}
-                                    <p>Pression : {{ weatherData[city].pressure }} hPa</p>
-                                {% endif %}
-                                {% if weatherData[city].description is defined %}
-                                    <p>Description : {{ weatherData[city].description }}</p>
-                                {% endif %}
-                                {% if weatherData[city].icon is defined %}
-                                    <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ weatherData[city].icon ~ '.png') }}" alt="Weather icon">
-                                {% endif %}
-                            </div>
+                            <a href="{{ path('weather_home', {'city': city}) }}"  class="weather-fav-card-a">
+                                <div class="weather-card">
+                                    <h3>{{ city }}</h3>
+                                    <p>Température : {{ weatherData[city].temperature }}°C</p>
+                                    {% if weatherData[city].humidity is defined %}
+                                        <p>Humidité : {{ weatherData[city].humidity }}%</p>
+                                    {% endif %}
+                                    {% if weatherData[city].pressure is defined %}
+                                        <p>Pression : {{ weatherData[city].pressure }} hPa</p>
+                                    {% endif %}
+                                    {% if weatherData[city].description is defined %}
+                                        <p>Description : {{ weatherData[city].description }}</p>
+                                    {% endif %}
+                                    {% if weatherData[city].icon is defined %}
+                                        <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ weatherData[city].icon ~ '.png') }}" alt="Weather icon">
+                                    {% endif %}
+                                </div>
+                            </a>
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -151,22 +153,24 @@
             <div class="default-cities">
                 {% for city, data in weatherData %}
                     {% if city not in favoriteCities %}
-                        <div class="weather-card">
-                            <h3>{{ city }}</h3>
-                            <p>Température : {{ data.temperature }}°C</p>
-                            {% if data.humidity is defined %}
-                                <p>Humidité : {{ data.humidity }}%</p>
-                            {% endif %}
-                            {% if data.pressure is defined %}
-                                <p>Pression : {{ data.pressure }} hPa</p>
-                            {% endif %}
-                            {% if data.description is defined %}
-                                <p>Description : {{ data.description }}</p>
-                            {% endif %}
-                            {% if data.icon is defined %}
-                                <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon">
-                            {% endif %}
-                        </div>
+                        <a href="{{ path('weather_home', {'city': city}) }}"  class="weather-other-card-a">
+                            <div class="weather-card">
+                                <h3>{{ city }}</h3>
+                                <p>Température : {{ data.temperature }}°C</p>
+                                {% if data.humidity is defined %}
+                                    <p>Humidité : {{ data.humidity }}%</p>
+                                {% endif %}
+                                {% if data.pressure is defined %}
+                                    <p>Pression : {{ data.pressure }} hPa</p>
+                                {% endif %}
+                                {% if data.description is defined %}
+                                    <p>Description : {{ data.description }}</p>
+                                {% endif %}
+                                {% if data.icon is defined %}
+                                    <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon">
+                                {% endif %}
+                            </div>
+                        </a>
                     {% endif %}
                 {% endfor %}
             </div>
