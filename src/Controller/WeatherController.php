@@ -168,7 +168,7 @@ class WeatherController extends AbstractController
         });
 
         $chartData = [
-            'labels' => array_map(function ($entry) { return $entry['dt_txt']; }, $forecastNext24Hours),
+            'labels' => array_map(function ($entry) { return (new \DateTime($entry['dt_txt']))->format('H'); }, $forecastNext24Hours),
             'temperature' => array_map(function ($entry) { return $entry['main']['temp']; }, $forecastNext24Hours),
             'windSpeed' => array_map(function ($entry) { return $entry['wind']['speed']; }, $forecastNext24Hours)
         ];

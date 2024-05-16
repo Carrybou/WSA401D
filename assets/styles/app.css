@@ -358,14 +358,25 @@ header{
 .btn-reinit-mdp{
     text-align:center; 
     margin-bottom:-20px
+}
 
 /*Graphique*/
 
+.toptier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin-top: 50px;
+}
+
 #weatherChart{
-    width: 800px;
+    width: 700px;
     height: 500px;
-    background-color: #F5F5F5;
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(20px); /* Apply blur effect */
+    padding: 40px;
+    border-radius: 30px;
 }
 .chart-container{
     height: 500px;

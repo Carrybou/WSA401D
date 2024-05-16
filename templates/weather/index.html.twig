@@ -33,6 +33,13 @@
 
     <div id="weather-info">
         {% if weatherData[selectedCity] is defined %}
+
+            <div class="toptier">
+                <div class="chart-container ">
+                    <canvas id="weatherChart" width="800" height="500"></canvas>
+                </div>
+
+            <div class="card">
             <h1>Météo à {{ selectedCity }}</h1>
             <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
             {% if weatherData[selectedCity].humidity is defined %}
@@ -56,8 +63,9 @@
             {% if weatherData[selectedCity].icon is defined %}
                 <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
             {% endif %}
-
-            <h2>Prévisions sur 5 jours / 3 heures</h2>
+            </div>
+            </div>
+            <h2>Prévisions de la semaine</h2>
 
             <div id="column-selectors" class="filtres-tab">
                 <label><input type="checkbox" data-column="0" checked> Jour</label>
@@ -193,10 +201,6 @@
         });
     </script>
 
-    <h2>Temperature and Wind Speed Chart</h2>
-    <div class="chart-container">
-        <canvas id="weatherChart" width="800" height="500"></canvas>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('weatherChart').getContext('2d');
@@ -208,18 +212,24 @@
                 datasets: [{
                     type: 'line',
                     label: 'Température',
+                    borderRadius: 6,
+                    cubicInterpolationMode: 'monotone',
+                    borderSkipped: false,
                     data: {{ chartData.temperature|json_encode|raw }},
-                    borderColor: 'red',
+                    borderColor: 'coral',
                     fill: false,
                     yAxisID: 'temp',
                 }, {
                     label: 'Vitesse du vent',
+                    borderRadius: 10,
+                    borderColor: 'white',
+                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
                     data: {{ chartData.windSpeed|json_encode|raw }},
-                    borderColor: 'blue',
                     yAxisID: 'wind',
                 }]
             },
             options: {
+
                 animation: {
                     onComplete: () => {
                         delayed = true;
@@ -233,13 +243,34 @@
                     },
                 },
                 scales: {
+                    x: {
+                        ticks: {
+                            color: 'white', // change the color
+                            font: {
+                                size: 16 // change the size
+                            }
+                        }
+                    },
                     temp: {
                         type: 'linear',
                         position: 'left',
+                        ticks: {
+                            color: 'white', // change the color
+                            font: {
+                                size: 16 // change the size
+                            }
+                        }
                     },
                     wind: {
                         type: 'linear',
                         position: 'right',
+                        ticks: {
+                            color: 'white', // change the color
+                            font: {
+                                size: 16 // change the size
+                            }
+                        },
+
                         grid: {
                             drawOnChartArea: false,
                         },
