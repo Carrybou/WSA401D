@@ -282,3 +282,8 @@ header{
 .card-lost-mdp p{
     text-align: center;
 }
+
+.btn-reinit-mdp{
+    text-align:center; 
+    margin-bottom:-20px
+}
