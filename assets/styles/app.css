@@ -222,7 +222,8 @@ header{
 }
 
 /* Default cities */
-.default-cities{
+.default-cities,
+.favorite-cities{
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -230,6 +231,23 @@ header{
     flex-wrap: wrap;
     margin-top: 75px;
 }
+.favorite-cities{
+    margin-bottom: 135px;
+}
+
+.weather-fav-card-a,
+.weather-other-card-a{
+    color: #fff;
+}
+
+.weather-other-card-a:hover,
+.weather-fav-card-a:hover{
+    /* Monter de 10px */
+    transform: translateY(-10px);
+    /* Grossir légèrement */
+    transform: scale(1.05);
+}
+
 .weather-card{
     /* background-color: #24353E; */
     background-image: linear-gradient(0.15turn, #3A5E72, #5C93B1);
@@ -255,6 +273,11 @@ header{
     top: -50px;
     right: -50px;
     width: 250px;
+}
+
+.other-city{
+    text-align: center;
+    font-size: 27px;
 }
 
 /* Page Register & Login */
