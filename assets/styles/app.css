@@ -316,3 +316,18 @@ header{
 .card-lost-mdp p{
     text-align: center;
 }
+
+
+
+/*Graphique*/
+
+#weatherChart{
+    width: 800px;
+    height: 500px;
+    background-color: #F5F5F5;
+    padding: 30px;
+}
+.chart-container{
+    height: 500px;
+    width: 800px;
+}

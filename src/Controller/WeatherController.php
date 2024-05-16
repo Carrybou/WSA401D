@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -10,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Exception;
 
@@ -29,12 +29,24 @@ class WeatherController extends AbstractController
     #[Route('/', name: 'weather_home')]
     public function index(Request $request): Response
     {
+        $city = 'Paris';
+        $weatherData = $this->weatherService->getWeatherData($city);
+        $temperature = $weatherData['main']['temp'];
+
+        $lat = $weatherData['coord']['lat'];
+        $lon = $weatherData['coord']['lon'];
+        $forecastData = $this->weatherService->getForecastData($lat, $lon,$city);
+        $forecast = $forecastData['list'];
+
+
         $weatherData = [];
         $error = null;
         $favoriteCities = ['London']; // Default city if no user is logged in or no favorite cities are set.
         $selectedCity = $request->query->get('city') ?: $request->request->get('city');
         $favoriteAction = $request->request->get('favorite_action');
         $columnPreferences = [];
+
+
 
         $token = $this->tokenStorage->getToken();
         if ($token && $user = $token->getUser()) {
@@ -51,7 +63,7 @@ class WeatherController extends AbstractController
                 $data = $this->weatherService->getWeatherData($selectedCity);
                 if (isset($data['main']['temp'])) {
                     $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $selectedCity)['list'];
-                    
+
                     // Adding the new data structure
                     $weatherData[$selectedCity] = [
                         'temperature' => $data['main']['temp'],
@@ -120,12 +132,30 @@ class WeatherController extends AbstractController
             }
         }
 
+        $now = time();
+        $next24Hours = $now + 24 * 60 * 60;
+
+        $forecastNext24Hours = array_filter($forecast, function ($entry) use ($now, $next24Hours) {
+            $forecastTime = strtotime($entry['dt_txt']);
+            return $forecastTime >= $now && $forecastTime <= $next24Hours;
+        });
+
+        $chartData = [
+            'labels' => array_map(function ($entry) { return $entry['dt_txt']; }, $forecastNext24Hours),
+            'temperature' => array_map(function ($entry) { return $entry['main']['temp']; }, $forecastNext24Hours),
+            'windSpeed' => array_map(function ($entry) { return $entry['wind']['speed']; }, $forecastNext24Hours)
+        ];
+
         return $this->render('weather/index.html.twig', [
             'favoriteCities' => $favoriteCities,
             'selectedCity' => $selectedCity,
             'weatherData' => $weatherData,
             'error' => $error,
             'columnPreferences' => $columnPreferences,
+            'city' => $city,
+            'temperature' => $temperature,
+            'forecast' => $forecast,
+            'chartData' => $chartData
         ]);
     }
 
