@@ -64,11 +64,17 @@ button:hover::before,
     opacity: 1;
 }
 
+table{
+    border:none;
+    text-align: center;
+    margin: 0 auto;
+}
+
 tr{
-    background-color: #ad3c3c
+    background-color: rgba(255,255,255,0.1);
 }
 td{
-    background-color: #25c222;
+    background-color: rgba(255,255,255,0.1);
 }
 
 /* Base (Header) */
@@ -190,6 +196,27 @@ header{
 .close-pop-up-here:hover{
     color: #4f6f9b;
     background-color: #1B262C;
+}
+
+.icon-tab-previ5d{
+    width: 50px;
+    height: auto;
+}
+
+.filtres-tab{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap:8px;
+    margin-bottom: 15px;
+}
+
+.filtres-tab label{
+    background-color: #24353E;
+    padding: 10px;
+    border-radius: 10px;
+    
 }
 
 /* Page Register & Login */

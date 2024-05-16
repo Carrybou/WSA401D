@@ -54,12 +54,12 @@
                 <p>Description : {{ weatherData[selectedCity].description }}</p>
             {% endif %}
             {% if weatherData[selectedCity].icon is defined %}
-                <img src="http://openweathermap.org/img/wn/{{ weatherData[selectedCity].icon }}@2x.png" alt="Weather icon">
+                <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
             {% endif %}
 
             <h2>Prévisions sur 5 jours / 3 heures</h2>
 
-            <div id="column-selectors">
+            <div id="column-selectors" class="filtres-tab">
                 <label><input type="checkbox" data-column="0" checked> Jour</label>
                 <label><input type="checkbox" data-column="1" checked> Heure</label>
                 <label><input type="checkbox" data-column="2" checked> Icon</label>
@@ -96,7 +96,7 @@
                         <tr>
                             <td>{{ item.day_of_week }}</td>
                             <td>{{ item.time }}</td>
-                            <td><img src="http://openweathermap.org/img/wn/{{ item.icon }}@2x.png" alt="Weather icon"></td>
+                            <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ item.icon ~ '.png') }}" alt="Weather icon"></td>
                             <td>{{ item.temp_min }} °C</td>
                             <td>{{ item.temp_max }} °C</td>
                             <td>{{ item.temp }} °C</td>
