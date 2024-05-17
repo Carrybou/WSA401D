@@ -64,18 +64,25 @@ button:hover::before,
     opacity: 1;
 }
 
-table{
-    border:none;
+table {
+    border: none;
     text-align: center;
     margin: 0 auto;
+    border-radius: 15px; /* Arrondir les bords */
+    background: linear-gradient(45deg, #3a5e724e, #24353e49);
+    padding: 15px;
 }
 
-tr{
-    background-color: rgba(255,255,255,0.1);
+tr {
+    /* background-color: rgba(0, 0, 0, 0.1); */
 }
-td{
-    background-color: rgba(255,255,255,0.1);
+
+td, th { /* Assurer qu'il n'y a pas de bordures sur les cellules */
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    border: none;
+    padding: 15px;
 }
+
 
 /* Base (Header) */
 header{
@@ -410,3 +417,51 @@ header{
     height: 500px;
     width: 800px;
 }
+
+/* --------------------- */
+/*-------- PHONE --------*/
+/* --------------------- */
+
+/* Version mobil */
+
+@media screen and (max-width: 768px) {
+    body{
+        font-size: 14px;
+    }
+
+    /* Header */
+    .villes-fav3{
+        display: none;
+    }
+    /* Search + Fav */
+    .pre-info-btn{
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        margin: 0;
+        align-items: center;
+    }
+    .form-search{
+        justify-content: center;
+    }
+
+    /* Graph + infos jour */
+    .toptier{
+        flex-direction: column-reverse;
+        gap: 20px;
+        width: 100%;
+    }
+    .chart-container{
+        width: 105vw;
+        height: auto;
+        display: flex;
+    }
+    #weatherChart{
+        margin: 0 auto;
+    }
+}
+
+
+/* --------------------- */
+/*------ FIN PHONE ------*/
+/* --------------------- */
