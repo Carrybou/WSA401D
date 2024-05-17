@@ -35,89 +35,75 @@
         {% if weatherData[selectedCity] is defined %}
 
             <div class="toptier">
-                <div class="chart-container ">
+                <div class="chart-container">
                     <canvas id="weatherChart" width="800" height="500"></canvas>
                 </div>
 
-            <div class="card">
-            <h1>Météo à {{ selectedCity }}</h1>
-            <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
-            {% if weatherData[selectedCity].humidity is defined %}
-                <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
-            {% endif %}
-            {% if weatherData[selectedCity].pressure is defined %}
-                <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
-            {% endif %}
-            {% if weatherData[selectedCity].wind_speed is defined %}
-                <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
-            {% endif %}
-            {% if weatherData[selectedCity].wind_direction is defined %}
-                <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
-            {% endif %}
-            {% if weatherData[selectedCity].cloudiness is defined %}
-                <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
-            {% endif %}
-            {% if weatherData[selectedCity].description is defined %}
-                <p>Description : {{ weatherData[selectedCity].description }}</p>
-            {% endif %}
-            {% if weatherData[selectedCity].icon is defined %}
-                <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
-            {% endif %}
-            </div>
+            
+                <div class="card">
+                    <h1>Météo à {{ selectedCity }}</h1>
+                    <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
+                    {% if weatherData[selectedCity].humidity is defined %}
+                        <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
+                    {% endif %}
+                    {% if weatherData[selectedCity].pressure is defined %}
+                        <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
+                    {% endif %}
+                    {% if weatherData[selectedCity].wind_speed is defined %}
+                        <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
+                    {% endif %}
+                    {% if weatherData[selectedCity].wind_direction is defined %}
+                        <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
+                    {% endif %}
+                    {% if weatherData[selectedCity].cloudiness is defined %}
+                        <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
+                    {% endif %}
+                    {% if weatherData[selectedCity].description is defined %}
+                        <p>Description : {{ weatherData[selectedCity].description }}</p>
+                    {% endif %}
+                    {% if weatherData[selectedCity].icon is defined %}
+                        <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
+                    {% endif %}
+                </div>
             </div>
             <h2>Prévisions de la semaine</h2>
 
             <div id="column-selectors" class="filtres-tab">
-                <label><input type="checkbox" data-column="0" checked> Jour</label>
-                <label><input type="checkbox" data-column="1" checked> Heure</label>
-                <label><input type="checkbox" data-column="2" checked> Icon</label>
                 <label><input type="checkbox" data-column="3" checked> Temp. Min</label>
                 <label><input type="checkbox" data-column="4" checked> Temp. Max</label>
-                <label><input type="checkbox" data-column="5" checked> Temp. Actuelle</label>
-                <label><input type="checkbox" data-column="6" checked> Description</label>
-                <label><input type="checkbox" data-column="7" checked> Vitesse du vent</label>
-                <label><input type="checkbox" data-column="8" checked> Direction du vent</label>
-                <label><input type="checkbox" data-column="9" checked> Couverture nuageuse</label>
-                <label><input type="checkbox" data-column="10" checked> Humidité</label>
-                <label><input type="checkbox" data-column="11" checked> Pression</label>
+                <label><input type="checkbox" data-column="5"> Vitesse du vent</label>
+                <label><input type="checkbox" data-column="6"> Humidité</label>
+                <label><input type="checkbox" data-column="7"> Pression</label>
             </div>
+
 
             <table class="table" id="forecast-table">
                 <thead>
                     <tr>
                         <th scope="col">Jour</th>
-                        <th scope="col">Heure</th>
                         <th scope="col">Icon</th>
                         <th scope="col">Temp. Min</th>
                         <th scope="col">Temp. Max</th>
-                        <th scope="col">Temp. Actuelle</th>
-                        <th scope="col">Description</th>
                         <th scope="col">Vitesse du vent</th>
-                        <th scope="col">Direction du vent</th>
-                        <th scope="col">Couverture nuageuse</th>
                         <th scope="col">Humidité</th>
                         <th scope="col">Pression</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in weatherData[selectedCity].forecast %}
+                    {% for dateW, data in forecastDataGrouped %}
                         <tr>
-                            <td>{{ item.day_of_week }}</td>
-                            <td>{{ item.time }}</td>
-                            <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ item.icon ~ '.png') }}" alt="Weather icon"></td>
-                            <td>{{ item.temp_min }} °C</td>
-                            <td>{{ item.temp_max }} °C</td>
-                            <td>{{ item.temp }} °C</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.wind_speed }} m/s</td>
-                            <td>{{ item.wind_direction }}°</td>
-                            <td>{{ item.cloudiness }}%</td>
-                            <td>{{ item.humidity }}%</td>
-                            <td>{{ item.pressure }} hPa</td>
+                            <td>{{ dateW }}</td>
+                            <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon"></td>
+                            <td>{{ data.temp_min }} °C</td>
+                            <td>{{ data.temp_max }} °C</td>
+                            <td>{{ data.wind_speed }} m/s</td>
+                            <td>{{ data.humidity }} %</td>
+                            <td>{{ data.pressure }} hPa</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
         {% else %}
             {% if not error %}
                 <p>Entrez une ville pour obtenir des données météorologiques.</p>
@@ -187,56 +173,50 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var errorMessage = document.getElementById('error-message');
-            if (errorMessage) {
-                errorMessage.addEventListener('click', function() {
-                    errorMessage.style.display = 'none';
-                });
-            }
+            const checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
+            const maxColumns = 2;  // Limite maximale de colonnes visibles
 
-            function toggleColumn(columnIndex, isVisible) {
-                var table = document.getElementById('forecast-table');
-                var rows = table.getElementsByTagName('tr');
-                for (var i = 0; i < rows.length; i++) {
-                    var cells = rows[i].getElementsByTagName('th').length ? rows[i].getElementsByTagName('th') : rows[i].getElementsByTagName('td');
-                    if (cells[columnIndex]) {
-                        cells[columnIndex].style.display = isVisible ? '' : 'none';
-                    }
-                }
-            }
+            // Applique la visibilité initiale basée sur l'état des cases à cocher
+            checkboxes.forEach(checkbox => {
+                toggleColumnVisibility(checkbox.dataset.column, checkbox.checked);
+            });
 
-            var checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
-            var columnPreferences = {{ columnPreferences|json_encode|raw }};
+            updateCheckboxStates();  // Met à jour l'état des cases à cocher selon la limite
 
-            checkboxes.forEach(function(checkbox) {
-                var column = checkbox.dataset.column;
-                var isChecked = columnPreferences.length ? columnPreferences.indexOf(parseInt(column)) !== -1 : true;
-
-                checkbox.checked = isChecked;
-                toggleColumn(column, isChecked);
-
+            checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    var preferences = [];
-                    checkboxes.forEach(function(checkbox) {
-                        if (checkbox.checked) {
-                            preferences.push(parseInt(checkbox.dataset.column));
-                        }
-                    });
-
-                    toggleColumn(this.dataset.column, this.checked);
-
-                    fetch('{{ path("save_column_preferences") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: JSON.stringify({ preferences: preferences })
-                    });
+                    const checkedCount = document.querySelectorAll('#column-selectors input[type="checkbox"]:checked').length;
+                    if (checkedCount > maxColumns) {
+                        alert('Vous ne pouvez afficher que deux colonnes à la fois. Veuillez décocher une autre colonne avant de sélectionner celle-ci.');
+                        checkbox.checked = false;  // Désélectionne la case si le maximum est dépassé
+                    } else {
+                        toggleColumnVisibility(this.dataset.column, this.checked);
+                    }
+                    updateCheckboxStates();
                 });
             });
+
+            function toggleColumnVisibility(columnIndex, isVisible) {
+                const table = document.getElementById('forecast-table');
+                const cells = table.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`);
+                cells.forEach(cell => {
+                    cell.style.display = isVisible ? '' : 'none';  // Ajuste la visibilité des cellules
+                });
+            }
+
+            function updateCheckboxStates() {
+                const checkedCount = document.querySelectorAll('#column-selectors input[type="checkbox"]:checked').length;
+                checkboxes.forEach(checkbox => {
+                    if (!checkbox.checked) {
+                        checkbox.disabled = checkedCount >= maxColumns;  // Désactive les cases non cochées si la limite est atteinte
+                    } else {
+                        checkbox.disabled = false;  // Réactive toutes les cases si moins de deux sont cochées
+                    }
+                });
+            }
         });
     </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
