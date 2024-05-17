@@ -54,10 +54,12 @@ class WeatherController extends AbstractController
                     $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $selectedCity)['list'];
 
                     $weatherData[$selectedCity] = [
-                        'temperature' => $data['main']['temp'],
+                        'temperature' => round($data['main']['temp']),
+                        'temp_min' => round($data['main']['temp_min']), // Add this line
+                        'temp_max' => round($data['main']['temp_max']), // Add this line
                         'humidity' => $data['main']['humidity'],
                         'pressure' => $data['main']['pressure'],
-                        'wind_speed' => $data['wind']['speed'],
+                        'wind_speed' => round($data['wind']['speed']),
                         'wind_direction' => $data['wind']['deg'],
                         'cloudiness' => $data['clouds']['all'],
                         'description' => $data['weather'][0]['description'],
@@ -127,10 +129,12 @@ class WeatherController extends AbstractController
                     $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $city)['list'];
 
                     $weatherData[$city] = [
-                        'temperature' => $data['main']['temp'],
+                        'temperature' => round($data['main']['temp']),
+                        'temp_min' => round($data['main']['temp_min']), // Add this line
+                        'temp_max' => round($data['main']['temp_max']), // Add this line
                         'humidity' => $data['main']['humidity'],
                         'pressure' => $data['main']['pressure'],
-                        'wind_speed' => $data['wind']['speed'],
+                        'wind_speed' => round($data['wind']['speed']),
                         'wind_direction' => $data['wind']['deg'],
                         'cloudiness' => $data['clouds']['all'],
                         'description' => $data['weather'][0]['description'],
@@ -181,10 +185,10 @@ class WeatherController extends AbstractController
                     $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $city)['list'];
 
                     $weatherData[$city] = [
-                        'temperature' => $data['main']['temp'],
-                        'humidity' => $data['main']['humidity'],
-                        'pressure' => $data['main']['pressure'],
-                        'wind_speed' => $data['wind']['speed'],
+                        'temperature' => round($data['main']['temp']),
+                        'humidity' => round($data['main']['humidity']),
+                        'pressure' => round($data['main']['pressure']),
+                        'wind_speed' => round($data['wind']['speed']),
                         'wind_direction' => $data['wind']['deg'],
                         'cloudiness' => $data['clouds']['all'],
                         'description' => $data['weather'][0]['description'],
