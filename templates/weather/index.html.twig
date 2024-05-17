@@ -66,43 +66,49 @@
                     {% endif %}
                 </div>
             </div>
-            <h2>Prévisions de la semaine</h2>
 
-            <div id="column-selectors" class="filtres-tab">
-                <label><input type="checkbox" data-column="3" checked> Temp. Min</label>
-                <label><input type="checkbox" data-column="4" checked> Temp. Max</label>
-                <label><input type="checkbox" data-column="5"> Vitesse du vent</label>
-                <label><input type="checkbox" data-column="6"> Humidité</label>
-                <label><input type="checkbox" data-column="7"> Pression</label>
-            </div>
+            {% if app.user %}
+                <h2>Prévisions de la semaine</h2>
 
+                <div id="column-selectors" class="filtres-tab">
+                    <label><input type="checkbox" class="column-checkbox" data-column="temp_min" {% if 'temp_min' in columnPreferences %}checked{% endif %}> Temp. Min</label>
+                    <label><input type="checkbox" class="column-checkbox" data-column="temp_max" {% if 'temp_max' in columnPreferences %}checked{% endif %}> Temp. Max</label>
+                    <label><input type="checkbox" class="column-checkbox" data-column="wind_speed" {% if 'wind_speed' in columnPreferences %}checked{% endif %}> Vitesse du vent</label>
+                    <label><input type="checkbox" class="column-checkbox" data-column="humidity" {% if 'humidity' in columnPreferences %}checked{% endif %}> Humidité</label>
+                    <label><input type="checkbox" class="column-checkbox" data-column="pressure" {% if 'pressure' in columnPreferences %}checked{% endif %}> Pression</label>
+                </div>
 
-            <table class="table" id="forecast-table">
-                <thead>
-                    <tr>
-                        <th scope="col">Jour</th>
-                        <th scope="col">Icon</th>
-                        <th scope="col">Temp. Min</th>
-                        <th scope="col">Temp. Max</th>
-                        <th scope="col">Vitesse du vent</th>
-                        <th scope="col">Humidité</th>
-                        <th scope="col">Pression</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for dateW, data in forecastDataGrouped %}
+                <table class="table" id="forecast-table">
+                    <thead>
                         <tr>
-                            <td>{{ dateW }}</td>
-                            <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon"></td>
-                            <td>{{ data.temp_min }} °C</td>
-                            <td>{{ data.temp_max }} °C</td>
-                            <td>{{ data.wind_speed }} m/s</td>
-                            <td>{{ data.humidity }} %</td>
-                            <td>{{ data.pressure }} hPa</td>
+                            <th scope="col">Jour</th>
+                            <th scope="col">Icon</th>
+                            <th scope="col">Temp. Min</th>
+                            <th scope="col">Temp. Max</th>
+                            <th scope="col">Vitesse du vent</th>
+                            <th scope="col">Humidité</th>
+                            <th scope="col">Pression</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for day, data in forecastDataGrouped %}
+                            <tr>
+                                <td>{{ day }}</td>
+                                <td><img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon"></td>
+                                <td>{{ data.temp_min }} °C</td>
+                                <td>{{ data.temp_max }} °C</td>
+                                <td>{{ data.wind_speed }} m/s</td>
+                                <td>{{ data.humidity }} %</td>
+                                <td>{{ data.pressure }} hPa</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Connectez-vous pour pouvoir accéder aux prévisions des prochains jours.</p>
+            {% endif %}
+
+
 
         {% else %}
             {% if not error %}
@@ -171,51 +177,89 @@
         {% endif %}
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
-            const maxColumns = 2;  // Limite maximale de colonnes visibles
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('#column-selectors input[type="checkbox"]');
+        const maxColumns = 2;  // Limite maximale de colonnes visibles
+        const defaultColumns = ['temp_min', 'temp_max'];
+        let columnPreferences = {{ columnPreferences|json_encode|raw }};
 
-            // Applique la visibilité initiale basée sur l'état des cases à cocher
+        // Si aucune préférence n'est définie, utilise les colonnes par défaut
+        if (columnPreferences.length === 0) {
+            columnPreferences = defaultColumns;
+        }
+
+        // Fonction pour appliquer la visibilité des colonnes
+        function toggleColumnVisibility(columnName, isVisible) {
+            const columnIndex = Array.from(checkboxes).findIndex(checkbox => checkbox.dataset.column === columnName) + 3; // +3 pour tenir compte des colonnes fixes
+            const table = document.getElementById('forecast-table');
+            const cells = table.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`);
+            cells.forEach(cell => {
+                cell.style.display = isVisible ? '' : 'none';
+            });
+        }
+
+        // Fonction pour mettre à jour l'état des cases à cocher
+        function updateCheckboxStates() {
+            const checkedCount = document.querySelectorAll('#column-selectors input[type="checkbox"]:checked').length;
             checkboxes.forEach(checkbox => {
-                toggleColumnVisibility(checkbox.dataset.column, checkbox.checked);
+                if (!checkbox.checked) {
+                    checkbox.disabled = checkedCount >= maxColumns;  // Désactive les cases non cochées si la limite est atteinte
+                } else {
+                    checkbox.disabled = false;  // Réactive toutes les cases si moins de deux sont cochées
+                }
+            });
+        }
+
+        // Fonction pour sauvegarder les préférences des colonnes
+        function saveColumnPreferences() {
+            const preferences = [];
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    preferences.push(checkbox.dataset.column);
+                }
             });
 
-            updateCheckboxStates();  // Met à jour l'état des cases à cocher selon la limite
-
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const checkedCount = document.querySelectorAll('#column-selectors input[type="checkbox"]:checked').length;
-                    if (checkedCount > maxColumns) {
-                        alert('Vous ne pouvez afficher que deux colonnes à la fois. Veuillez décocher une autre colonne avant de sélectionner celle-ci.');
-                        checkbox.checked = false;  // Désélectionne la case si le maximum est dépassé
-                    } else {
-                        toggleColumnVisibility(this.dataset.column, this.checked);
-                    }
-                    updateCheckboxStates();
-                });
+            fetch('{{ path("save_column_preferences") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': '{{ csrf_token("save_column_preferences") }}'
+                },
+                body: JSON.stringify({ preferences: preferences })
             });
+        }
 
-            function toggleColumnVisibility(columnIndex, isVisible) {
-                const table = document.getElementById('forecast-table');
-                const cells = table.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`);
-                cells.forEach(cell => {
-                    cell.style.display = isVisible ? '' : 'none';  // Ajuste la visibilité des cellules
-                });
-            }
-
-            function updateCheckboxStates() {
-                const checkedCount = document.querySelectorAll('#column-selectors input[type="checkbox"]:checked').length;
-                checkboxes.forEach(checkbox => {
-                    if (!checkbox.checked) {
-                        checkbox.disabled = checkedCount >= maxColumns;  // Désactive les cases non cochées si la limite est atteinte
-                    } else {
-                        checkbox.disabled = false;  // Réactive toutes les cases si moins de deux sont cochées
-                    }
-                });
-            }
+        // Applique la visibilité initiale basée sur les préférences ou les colonnes par défaut
+        checkboxes.forEach(checkbox => {
+            const column = checkbox.dataset.column;
+            const isChecked = columnPreferences.includes(column);
+            checkbox.checked = isChecked;
+            toggleColumnVisibility(column, isChecked);
         });
-    </script>
+
+        updateCheckboxStates();  // Met à jour l'état des cases à cocher selon la limite
+
+        // Écoute les changements des cases à cocher
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checkedCount = document.querySelectorAll('#column-selectors input[type="checkbox"]:checked').length;
+                if (checkedCount > maxColumns) {
+                    alert('Vous ne pouvez afficher que deux colonnes à la fois. Veuillez décocher une autre colonne avant de sélectionner celle-ci.');
+                    checkbox.checked = false;  // Désélectionne la case si le maximum est dépassé
+                } else {
+                    toggleColumnVisibility(this.dataset.column, this.checked);
+                    saveColumnPreferences();
+                }
+                updateCheckboxStates();
+            });
+        });
+    });
+</script>
+
+
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
