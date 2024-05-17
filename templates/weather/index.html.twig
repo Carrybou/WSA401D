@@ -39,32 +39,66 @@
                     <canvas id="weatherChart" width="800" height="500"></canvas>
                 </div>
 
-            
-                <div class="card">
-                    <h1>Météo à {{ selectedCity }}</h1>
-                    <p>La température actuelle est de {{ weatherData[selectedCity].temperature }}°C.</p>
-                    {% if weatherData[selectedCity].humidity is defined %}
-                        <p>Humidité : {{ weatherData[selectedCity].humidity }}%</p>
-                    {% endif %}
-                    {% if weatherData[selectedCity].pressure is defined %}
-                        <p>Pression atmosphérique : {{ weatherData[selectedCity].pressure }} hPa</p>
-                    {% endif %}
-                    {% if weatherData[selectedCity].wind_speed is defined %}
-                        <p>Vitesse du vent : {{ weatherData[selectedCity].wind_speed }} m/s</p>
-                    {% endif %}
-                    {% if weatherData[selectedCity].wind_direction is defined %}
-                        <p>Direction du vent : {{ weatherData[selectedCity].wind_direction }}°</p>
-                    {% endif %}
-                    {% if weatherData[selectedCity].cloudiness is defined %}
-                        <p>Couverture nuageuse : {{ weatherData[selectedCity].cloudiness }}%</p>
-                    {% endif %}
+            <div class="weather-card">
+            <h3 style="margin: 0; font-size: 40px;line-height: 40px; z-index: 100">{{ selectedCity|capitalize }}</h3>
+                <div style="display: flex; flex-direction: column;">
+                    <div style="display: flex; flex-direction: row"><div style="font-size: 50px; margin: 0">{{ weatherData[selectedCity].temperature }}</div><div style="position: relative; top:10px"> °C</div></div>
                     {% if weatherData[selectedCity].description is defined %}
-                        <p>Description : {{ weatherData[selectedCity].description }}</p>
+                        <p style="margin-bottom: 5px">{{ weatherData[selectedCity].description |capitalize }}</p>
                     {% endif %}
-                    {% if weatherData[selectedCity].icon is defined %}
-                        <img class="icon-tab-previ5d" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
+                    {% if weatherData[selectedCity].temp_max is defined %}
+                        {% if weatherData[selectedCity].temp_min is defined %}
+
+                            <div style="display: flex; margin: 5px 0; gap: 5px">
+                            {{ weatherData[selectedCity].temp_max }}°
+                            <img style=" width: 20px; height: 20px" src="{{ asset('images/icons/arrow.png') }}" alt="High temperature icon">
+                            {{ weatherData[selectedCity].temp_min }}°
+
+                        </div>
+                        {% endif %}
                     {% endif %}
                 </div>
+
+            {% if weatherData[selectedCity].humidity is defined and weatherData[selectedCity].pressure is defined %}
+    <div style="display: flex; align-items: center;">
+        <p style="margin-right: 10px; border-right: 1px solid #000; padding-right: 10px;">Hum : {{ weatherData[selectedCity].humidity }}%</p>
+        <p>Press atmo : {{ weatherData[selectedCity].pressure }} hPa</p>
+    </div>
+{% endif %}
+            {% if weatherData[selectedCity].wind_speed is defined %}
+    <div style="display: flex; margin: 10px 0; gap: 10px"><img style=" width: 20px; height: 20px" src="{{ asset('images/icons/wind.png') }}" alt="wind icon">
+        {{ weatherData[selectedCity].wind_speed }} m/s
+        <img id="wind-direction" style=" width: 18px; height: 20px" src="{{ asset('images/icons/wind-direction.png') }}" alt="High temperature icon">
+        {% if weatherData[selectedCity].wind_direction is defined %}
+            <div id="wind-direction-letter"></div>
+            <script>
+                function degreesToCardinalDirection(degrees) {
+                    var cardinalDirections = ['Nord', 'Nord Est', 'Est', 'Sud Est', 'Sud', 'Sud Ouest', 'Ouest', 'Nord Ouest'];
+                    var index = Math.round(((degrees % 360) / 45)) % 8;
+                    return cardinalDirections[index];
+                }
+                var windDirection = {{ weatherData[selectedCity].wind_direction }};
+                var windDirectionLetter = degreesToCardinalDirection({{ weatherData[selectedCity].wind_direction }});
+                document.getElementById('wind-direction-letter').innerText = windDirectionLetter;
+            </script>
+        {% endif %}
+    </div>
+        {% endif %}
+        {% if weatherData[selectedCity].wind_direction is defined %}
+            <script>
+                var windDirection = {{ weatherData[selectedCity].wind_direction }};
+                document.getElementById('wind-direction').style.transform = 'rotate(' + {{ weatherData[selectedCity].wind_direction }} + 'deg)';
+
+
+            </script>
+        {% endif %}
+
+
+            {% if weatherData[selectedCity].icon is defined %}
+                <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ weatherData[selectedCity].icon ~ '.png') }}" alt="Weather icon">
+            {% endif %}
+            </div>
+            
             </div>
 
             {% if app.user %}
@@ -122,17 +156,24 @@
                         {% if weatherData[city] is defined %}
                             <a href="{{ path('weather_home', {'city': city}) }}"  class="weather-fav-card-a">
                                 <div class="weather-card">
-                                    <h3>{{ city }}</h3>
-                                    <p>Température : {{ weatherData[city].temperature }}°C</p>
-                                    {% if weatherData[city].humidity is defined %}
-                                        <p>Humidité : {{ weatherData[city].humidity }}%</p>
-                                    {% endif %}
-                                    {% if weatherData[city].pressure is defined %}
-                                        <p>Pression : {{ weatherData[city].pressure }} hPa</p>
-                                    {% endif %}
-                                    {% if weatherData[city].description is defined %}
-                                        <p>Description : {{ weatherData[city].description }}</p>
-                                    {% endif %}
+                                    <h3 style="margin: 0; font-size: 40px;line-height: 40px; z-index: 100">{{ city|capitalize }}</h3>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <div style="display: flex; flex-direction: row"><div style="font-size: 50px; margin: 0">{{ weatherData[city].temperature }}</div><div style="position: relative; top:10px"> °C</div></div>
+                                        {% if weatherData[city].description is defined %}
+                                            <p style="margin-bottom: 5px">{{ weatherData[city].description |capitalize }}</p>
+                                        {% endif %}
+                                        {% if weatherData[city].temp_max is defined %}
+                                            {% if weatherData[city].temp_min is defined %}
+
+                                                <div style="display: flex; margin: 5px 0; gap: 5px">
+                                                    {{ weatherData[city].temp_max }}°
+                                                    <img style=" width: 20px; height: 20px" src="{{ asset('images/icons/arrow.png') }}" alt="High temperature icon">
+                                                    {{ weatherData[city].temp_min }}°
+
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                     {% if weatherData[city].icon is defined %}
                                         <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ weatherData[city].icon ~ '.png') }}" alt="Weather icon">
                                     {% endif %}
@@ -153,17 +194,25 @@
                     {% if city not in favoriteCities %}
                         <a href="{{ path('weather_home', {'city': city}) }}"  class="weather-other-card-a">
                             <div class="weather-card">
-                                <h3>{{ city }}</h3>
-                                <p>Température : {{ data.temperature }}°C</p>
-                                {% if data.humidity is defined %}
-                                    <p>Humidité : {{ data.humidity }}%</p>
-                                {% endif %}
-                                {% if data.pressure is defined %}
-                                    <p>Pression : {{ data.pressure }} hPa</p>
-                                {% endif %}
-                                {% if data.description is defined %}
-                                    <p>Description : {{ data.description }}</p>
-                                {% endif %}
+                                <h3 style="margin: 0; font-size: 40px;line-height: 40px; z-index: 100">{{ city|capitalize }}</h3>
+                                <div style="display: flex; flex-direction: column;">
+                                    <div style="display: flex; flex-direction: row"><div style="font-size: 50px; margin: 0">{{ data.temperature }}</div><div style="position: relative; top:10px"> °C</div></div>
+                                    {% if data.description is defined %}
+                                        <p style="margin-bottom: 5px">{{ data.description |capitalize }}</p>
+                                    {% endif %}
+                                    {% if data.temp_max is defined %}
+                                        {% if data.temp_min is defined %}
+
+                                            <div style="display: flex; margin: 5px 0; gap: 5px">
+                                                {{ data.temp_max }}°
+                                                <img style=" width: 20px; height: 20px" src="{{ asset('images/icons/arrow.png') }}" alt="High temperature icon">
+                                                {{ data.temp_min }}°
+
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+
                                 {% if data.icon is defined %}
                                     <img class="icon-tab-previ5d icon-tab-previ5d-NoSearch" src="{{ asset('iconsnew/' ~ data.icon ~ '.png') }}" alt="Weather icon">
                                 {% endif %}

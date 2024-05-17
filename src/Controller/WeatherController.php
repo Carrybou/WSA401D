@@ -57,6 +57,7 @@ class WeatherController extends AbstractController
                     $forecastDataGrouped = $this->aggregateForecastData($forecastData);
 
                     $chartData = $this->prepareChartData($forecastData); // Préparer les données du graphique
+
                 } else {
                     throw new Exception("Invalid data received from the weather API.");
                 }
