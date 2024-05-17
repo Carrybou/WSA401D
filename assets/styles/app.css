@@ -64,18 +64,25 @@ button:hover::before,
     opacity: 1;
 }
 
-table{
-    border:none;
+table {
+    border: none;
     text-align: center;
     margin: 0 auto;
+    border-radius: 15px; /* Arrondir les bords */
+    background: linear-gradient(45deg, #3a5e724e, #24353e49);
+    padding: 15px;
 }
 
-tr{
-    background-color: rgba(255,255,255,0.1);
+tr {
+    /* background-color: rgba(0, 0, 0, 0.1); */
 }
-td{
-    background-color: rgba(255,255,255,0.1);
+
+td, th { /* Assurer qu'il n'y a pas de bordures sur les cellules */
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    border: none;
+    padding: 15px;
 }
+
 
 /* Base (Header) */
 header{
@@ -222,7 +229,8 @@ header{
 }
 
 /* Default cities */
-.default-cities{
+.default-cities,
+.favorite-cities{
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -230,6 +238,23 @@ header{
     flex-wrap: wrap;
     margin-top: 75px;
 }
+.favorite-cities{
+    margin-bottom: 135px;
+}
+
+.weather-fav-card-a,
+.weather-other-card-a{
+    color: #fff;
+}
+
+.weather-other-card-a:hover,
+.weather-fav-card-a:hover{
+    /* Monter de 10px */
+    transform: translateY(-10px);
+    /* Grossir légèrement */
+    transform: scale(1.05);
+}
+
 .weather-card{
     /* background-color: #24353E; */
     background-image: linear-gradient(0.15turn, #3A5E72, #5C93B1);
@@ -240,9 +265,14 @@ header{
     display: flex;
     flex-direction: column;
     position: relative;
-    padding-top:200px;
+    padding-top:130px;
     border: 1px solid rgba(255,255,255,0.1);
+
 }
+.weather-card p{
+    margin: 5px 0;
+}
+
 .weather-card h3{
     position: absolute;
     top: 20px;
@@ -252,9 +282,14 @@ header{
 }
 .icon-tab-previ5d-NoSearch{
     position: absolute;
-    top: -50px;
-    right: -50px;
+    top: -75px;
+    right: -75px;
     width: 250px;
+}
+
+.other-city{
+    text-align: center;
+    font-size: 27px;
 }
 
 /* Page Register & Login */
@@ -358,16 +393,75 @@ header{
 .btn-reinit-mdp{
     text-align:center; 
     margin-bottom:-20px
+}
 
 /*Graphique*/
 
+.toptier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin-top: 50px;
+}
+
 #weatherChart{
-    width: 800px;
+    width: 700px;
     height: 500px;
-    background-color: #F5F5F5;
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(20px); /* Apply blur effect */
+    padding: 40px;
+    border-radius: 30px;
 }
 .chart-container{
     height: 500px;
     width: 800px;
 }
+
+/* --------------------- */
+/*-------- PHONE --------*/
+/* --------------------- */
+
+/* Version mobil */
+
+@media screen and (max-width: 768px) {
+    body{
+        font-size: 14px;
+    }
+
+    /* Header */
+    .villes-fav3{
+        display: none;
+    }
+    /* Search + Fav */
+    .pre-info-btn{
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        margin: 0;
+        align-items: center;
+    }
+    .form-search{
+        justify-content: center;
+    }
+
+    /* Graph + infos jour */
+    .toptier{
+        flex-direction: column-reverse;
+        gap: 20px;
+        width: 100%;
+    }
+    .chart-container{
+        width: 105vw;
+        height: auto;
+        display: flex;
+    }
+    #weatherChart{
+        margin: 0 auto;
+    }
+}
+
+
+/* --------------------- */
+/*------ FIN PHONE ------*/
+/* --------------------- */
