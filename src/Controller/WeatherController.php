@@ -255,12 +255,13 @@ class WeatherController extends AbstractController
     {
         if (!$user->getFavoriteCity1()) {
             $user->setFavoriteCity1($city);
-        } elseif (!$user.getFavoriteCity2()) {
+        } elseif (!$user->getFavoriteCity2()) {
             $user->setFavoriteCity2($city);
         } else {
             $user->setFavoriteCity3($city);
         }
     }
+
 
     private function removeCityFromFavorites($user, $city)
     {
