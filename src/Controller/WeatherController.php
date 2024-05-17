@@ -161,12 +161,12 @@ class WeatherController extends AbstractController
     private function prepareCurrentWeatherData($data)
     {
         return [
-            'temperature' => $data['main']['temp'],
-            'humidity' => $data['main']['humidity'],
-            'pressure' => $data['main']['pressure'],
-            'wind_speed' => $data['wind']['speed'],
-            'wind_direction' => $data['wind']['deg'],
-            'cloudiness' => $data['clouds']['all'],
+            'temperature' => round($data['main']['temp']),
+            'humidity' => round($data['main']['humidity']),
+            'pressure' => round($data['main']['pressure']),
+            'wind_speed' => round($data['wind']['speed']),
+            'wind_direction' => round($data['wind']['deg']),
+            'cloudiness' => round($data['clouds']['all']),
             'description' => $data['weather'][0]['description'],
             'icon' => $data['weather'][0]['icon']
         ];
@@ -179,15 +179,15 @@ class WeatherController extends AbstractController
                 'day_of_week' => (new \DateTime($item['dt_txt']))->format('l'),
                 'time' => (new \DateTime($item['dt_txt']))->format('H:i'),
                 'icon' => $item['weather'][0]['icon'],
-                'temp_min' => $item['main']['temp_min'],
-                'temp_max' => $item['main']['temp_max'],
-                'temp' => $item['main']['temp'],
+                'temp_min' => round($item['main']['temp_min']),
+                'temp_max' => round($item['main']['temp_max']),
+                'temp' => round($item['main']['temp']),
                 'description' => $item['weather'][0]['description'],
-                'wind_speed' => $item['wind']['speed'],
-                'wind_direction' => $item['wind']['deg'],
-                'cloudiness' => $item['clouds']['all'],
-                'humidity' => $item['main']['humidity'],
-                'pressure' => $item['main']['pressure']
+                'wind_speed' => round($item['wind']['speed']),
+                'wind_direction' => round($item['wind']['deg']),
+                'cloudiness' => round($item['clouds']['all']),
+                'humidity' => round($item['main']['humidity']),
+                'pressure' => round($item['main']['pressure'])
             ];
         }, $forecastData);
     }
@@ -211,16 +211,16 @@ class WeatherController extends AbstractController
 
             if (!isset($forecastDataGrouped[$dateW])) {
                 $forecastDataGrouped[$dateW] = [
-                    'temp_min' => $item['main']['temp_min'],
-                    'temp_max' => $item['main']['temp_max'],
+                    'temp_min' => round($item['main']['temp_min']),
+                    'temp_max' => round($item['main']['temp_max']),
                     'icons' => [$item['weather'][0]['icon']],
-                    'wind_speed' => $item['wind']['speed'],
-                    'humidity' => $item['main']['humidity'],
-                    'pressure' => $item['main']['pressure']
+                    'wind_speed' => round($item['wind']['speed']),
+                    'humidity' => round($item['main']['humidity']),
+                    'pressure' => round($item['main']['pressure'])
                 ];
             } else {
-                $forecastDataGrouped[$dateW]['temp_min'] = min($forecastDataGrouped[$dateW]['temp_min'], $item['main']['temp_min']);
-                $forecastDataGrouped[$dateW]['temp_max'] = max($forecastDataGrouped[$dateW]['temp_max'], $item['main']['temp_max']);
+                $forecastDataGrouped[$dateW]['temp_min'] = min(round($forecastDataGrouped[$dateW]['temp_min']), round($item['main']['temp_min']));
+                $forecastDataGrouped[$dateW]['temp_max'] = max(round($forecastDataGrouped[$dateW]['temp_max']), round($item['main']['temp_max']));
                 $forecastDataGrouped[$dateW]['icons'][] = $item['weather'][0]['icon'];
             }
         }
