@@ -231,6 +231,7 @@ class WeatherController extends AbstractController
             $data['icon'] = key($iconCounts);
             unset($data['icons']);
         }
+        
 
         return $forecastDataGrouped;
     }
