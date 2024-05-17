@@ -9,6 +9,9 @@
 /var/cache/
 /var/log/
 /vendor/
+
+#apple
+*.DS_Store
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
