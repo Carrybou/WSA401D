@@ -132,7 +132,6 @@ class WeatherController extends AbstractController
         ]);
     }
 
-
     private function prepareChartData($forecastData)
     {
         $now = new \DateTime();
@@ -231,7 +230,6 @@ class WeatherController extends AbstractController
             $data['icon'] = key($iconCounts);
             unset($data['icons']);
         }
-        
 
         return $forecastDataGrouped;
     }
@@ -262,7 +260,6 @@ class WeatherController extends AbstractController
             $user->setFavoriteCity3($city);
         }
     }
-
 
     private function removeCityFromFavorites($user, $city)
     {
