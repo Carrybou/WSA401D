@@ -444,7 +444,7 @@ header{
     background: rgba(255, 255, 255, 0.13);
     backdrop-filter: blur(20px); /* Apply blur effect */
     padding: 40px;
-    border-radius: 30px;
+    border-radius: 15px;
 }
 .chart-container{
     height: 500px;
