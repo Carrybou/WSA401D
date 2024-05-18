@@ -5,10 +5,12 @@
 {% block body %}
     <div class="pre-info-btn">
         <form class="form-search" method="post" action="{{ path('weather_home') }}">
-            <label for="city">Ville :</label>
-            <input type="text" id="city" name="city" value="{{ selectedCity }}" required>
-            <button class="search" type="submit">Rechercher</button>
-        </form>
+    <div class="search-container">
+        <i class="fa fa-search search-icon"></i>
+        <input type="text" id="city" name="city" value="{{ selectedCity }}"placeholder="Rechercher" required>
+        <button class="search" type="submit"><i class="fa fa-arrow-right"></i></button>
+    </div>
+</form>
 
         {% if app.user %}
             {% if selectedCity in favoriteCities %}
