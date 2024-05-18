@@ -42,7 +42,7 @@
                 </div>
 
             <div class="weather-card">
-            <h3 style="margin: 0; font-size: 40px;line-height: 40px; z-index: 100">{{ selectedCity|capitalize }}</h3>
+            <h3>{{ selectedCity|capitalize }}</h3>
                 <div style="display: flex; flex-direction: column;">
                     <div style="display: flex; flex-direction: row"><div style="font-size: 50px; margin: 0">{{ weatherData[selectedCity].temperature }}</div><div style="position: relative; top:10px"> °C</div></div>
                     {% if weatherData[selectedCity].description is defined %}
@@ -104,7 +104,7 @@
             </div>
 
             {% if app.user %}
-                <h2>Prévisions de la semaine</h2>
+                <h3 class="other-city">Prévisions de la semaine</h3>
 
                 <div id="column-selectors" class="filtres-tab">
                     <label><input type="checkbox" class="column-checkbox" data-column="temp_min" {% if 'temp_min' in columnPreferences %}checked{% endif %}> Temp. Min</label>
@@ -157,7 +157,7 @@
                         {% if weatherData[city] is defined %}
                             <a href="{{ path('weather_home', {'city': city}) }}"  class="weather-fav-card-a">
                                 <div class="weather-card">
-                                    <h3 style="margin: 0; font-size: 40px;line-height: 40px; z-index: 100">{{ city|capitalize }}</h3>
+                                    <h3>{{ city|capitalize }}</h3>
                                     <div style="display: flex; flex-direction: column;">
                                         <div style="display: flex; flex-direction: row"><div style="font-size: 50px; margin: 0">{{ weatherData[city].temperature }}</div><div style="position: relative; top:10px"> °C</div></div>
                                         {% if weatherData[city].description is defined %}
@@ -195,7 +195,7 @@
                     {% if city not in favoriteCities %}
                         <a href="{{ path('weather_home', {'city': city}) }}"  class="weather-other-card-a">
                             <div class="weather-card">
-                                <h3 style="margin: 0; font-size: 40px;line-height: 40px; z-index: 100">{{ city|capitalize }}</h3>
+                                <h3>{{ city|capitalize }}</h3>
                                 <div style="display: flex; flex-direction: column;">
                                     <div style="display: flex; flex-direction: row"><div style="font-size: 50px; margin: 0">{{ data.temperature }}</div><div style="position: relative; top:10px"> °C</div></div>
                                     {% if data.description is defined %}
