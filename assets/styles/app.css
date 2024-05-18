@@ -170,7 +170,7 @@ header{
     height: 20px;
 }
 
-.search {
+.search{
     position: absolute;
     right: 15px;
     width: 15px;
@@ -181,24 +181,21 @@ header{
     animation: none;
     transition: none;
     border-radius: 0;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
-.search:hover{
-    animation: none;
-    transition: none;
-    background-image: none;
-    border-radius: 0;
-
-}
-
-.search:hover::before{
+.search::before{
     content: '';
+    background-image: none;
     animation: none;
     transition: none;
-    background-image: none;
     border-radius: 0;
-
-
 }
+
+.search:hover{
+    transform: translateX(3px);
+} 
 
 .btn-favorite-R:hover::before{
     content: 'Retirer des favoris ♡';
