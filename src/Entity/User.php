@@ -49,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "json", nullable: true)]
     private ?array $columnPreferences = null;
 
+    #[ORM\Column(type: "string", length: 100, nullable: true)]
+    private ?string $firstName = null;
+
     public function getFavoriteCity1(): ?string
     {
         return $this->favoriteCity1;
@@ -168,7 +171,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
@@ -180,6 +182,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): static
+    {
+        $this->firstName = $firstName;
 
         return $this;
     }

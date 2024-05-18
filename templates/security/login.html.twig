@@ -5,7 +5,10 @@
 {% block body %}
     <form method="post">
         {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="error" onclick="this.style.display='none'">
+                <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                <p>Cliquer sur la carte pour la faire disparaître.</p>
+            </div>
         {% endif %}
 
         {% if app.user %}
@@ -28,7 +31,7 @@
                         <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
                     </div>
                     <div>
-                        <label for="password">Password</label>
+                        <label for="password">Mot de passe</label>
                         <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
                     </div>
                 </div>
@@ -44,8 +47,15 @@
 
                 <p>Vous n'avez pas de compte ? <a href="/register" class="link-seco">S'inscrire</a></p>
             </div>
-            
         {% endif %}
-        
     </form>
+
+    <script>
+        // Script pour cacher l'élément avec la classe "error" lorsqu'on clique dessus
+        document.querySelectorAll('.error').forEach(function(element) {
+            element.addEventListener('click', function() {
+                element.style.display = 'none';
+            });
+        });
+    </script>
 {% endblock %}
