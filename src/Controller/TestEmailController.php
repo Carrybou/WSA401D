@@ -17,12 +17,12 @@ class TestEmailController extends AbstractController
         $email = (new Email())
             ->from('melvinbecue@gmail.com')
             ->to('melbecop@gmail.com')
-            ->subject('Test Email from Symfony')
-            ->text('This is a test email.');
+            ->subject('Test du Mailer Symfony')
+            ->text('bla bla bla email.');
 
         $mailer->send($email);
 
-        return new Response('Email sent!');
+        return new Response('Email envoyé !');
     }
 }
 

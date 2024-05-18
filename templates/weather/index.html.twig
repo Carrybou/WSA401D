@@ -13,6 +13,7 @@
 </form>
 
         {% if app.user %}
+            <p>Bonjour {{ app.user.firstName }} !</p>
             {% if selectedCity in favoriteCities %}
                 <form method="post" action="{{ path('weather_home') }}">
                     <input type="hidden" name="city" value="{{ selectedCity }}">
@@ -30,7 +31,10 @@
     </div>
 
     {% if error %}
-        <div class="error" id="error-message">{{ error|raw }}</div>
+        <div class="error" id="error-message">
+        <p>{{ error|raw }}</p>
+        <p>Cliquer sur la carte pour la faire disparaître.</p>
+        </div>
     {% endif %}
 
     <div id="weather-info">
@@ -142,7 +146,9 @@
                     </tbody>
                 </table>
             {% else %}
-                <p>Connectez-vous pour pouvoir accéder aux prévisions des prochains jours.</p>
+                <div class="previdmd">
+                    <p>Connectez-vous pour pouvoir accéder aux prévisions des prochains jours.</p>
+                </div>
             {% endif %}
 
 
@@ -304,6 +310,16 @@
                 });
             });
         });
+
+        {# Script pour error display none #}
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.error').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    element.style.display = 'none';
+                });
+            });
+        });
+
     </script>
 
 

@@ -25,4 +25,13 @@ services:
             $projectDir: '%kernel.project_dir%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+    # Error controller configuration
+    App\Controller\ErrorController:
+        tags: ['controller.service_arguments']
+
+    # Override the default exception controller
+    Symfony\Component\HttpKernel\EventListener\ErrorListener:
+        arguments:
+            $controller: 'App\Controller\ErrorController::showError'
 
