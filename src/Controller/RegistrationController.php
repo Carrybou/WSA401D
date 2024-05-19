@@ -1,6 +1,4 @@
 <?php
-// src/Controller/RegistrationController.php
-
 namespace App\Controller;
 
 use App\Entity\User;
@@ -39,6 +37,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $user->setFirstName($form->get('firstName')->getData());
             $user->setColumnPreferences(["temp_min", "temp_max"]);
 
             $entityManager->persist($user);
@@ -73,7 +72,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Votre email a été vérifié.');
 
         return $this->redirectToRoute('app_register');
     }

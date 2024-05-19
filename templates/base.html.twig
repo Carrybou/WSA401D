@@ -32,16 +32,22 @@
                     {% endfor %}
                 </div>
             {% endif %}
+            <div class="btn-header">
+                <a href="{{ path('app_profil')}}">
+                    <button class="btn-modifname-homepage">Modifier mon prénom</button>
+                </a>
 
-            {% if not app.user %}
-                <a href="{{ path('app_login') }}">
-                    <button class="btn-connexion-homepage">Connexion</button>
-                </a>
-            {% else %}
-                <a href="{{ path('app_logout') }}">
-                    <button class="btn-deconnexion-homepage">Déconnexion</button>
-                </a>
-            {% endif %}
+                {% if not app.user %}
+                    <a href="{{ path('app_login') }}">
+                        <button class="btn-connexion-homepage">Connexion</button>
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_logout') }}">
+                        <button class="btn-deconnexion-homepage">Déconnexion</button>
+                    </a>
+                {% endif %}
+            </div>
+            
         </header>
         {% block body %}{% endblock %}
     </body>
