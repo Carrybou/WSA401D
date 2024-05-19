@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -49,8 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "json", nullable: true)]
     private ?array $columnPreferences = null;
 
-    #[ORM\Column(type: "string", length: 100, nullable: true)]
-    private ?string $firstName = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $firstName = '';
 
     public function getFavoriteCity1(): ?string
     {

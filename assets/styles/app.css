@@ -382,12 +382,40 @@ header{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 130px;
+    height: 360px;
     text-align: center;
 }
 
+.logged div{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.btn-maj-first-name,
+.logged div{
+    width: 200px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+.logged div label{
+    margin-bottom: 5px;
+
+}
+
+.btn-maj-first-name::before{
+    content: 'Mettre à jour';
+}
+.btn-header{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
 .btn-deconnexion::before{
     content: 'Se déconnecter';
+}
+.btn-modifname-homepage::before{
+    content: 'Modifier mon prénom';
 }
 
 .btn-deconnexion{

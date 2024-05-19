@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240518214540 extends AbstractMigration
+final class Version20240519142355 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,7 @@ final class Version20240518214540 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE user ADD first_name VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE user ADD first_name VARCHAR(255) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void

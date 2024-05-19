@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Prénom{% endblock %}
+
+{% block body %}
+    <div class="mb-3 logged">
+        <p>Vous êtes connecté avec l'adresse email {{ app.user.userIdentifier }}.</p>
+        
+        <h1 class="h3 mb-3 font-weight-normal">Modifier mon prénom</h1>
+        {{ form_start(firstNameForm) }}
+            <div>
+                {{ form_label(firstNameForm.firstName) }}
+                {{ form_widget(firstNameForm.firstName) }}
+            </div>
+            <button class="btn-login btn-maj-first-name" type="submit">Mettre à jour</button>
+        {{ form_end(firstNameForm) }}
+
+        <a href="{{ path('app_logout') }}" class="btn-deconnexion">Se déconnecter</a>
+    </div>
+{% endblock %}
