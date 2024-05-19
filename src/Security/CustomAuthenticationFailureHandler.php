@@ -4,7 +4,7 @@ namespace App\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response; // Ajout de la classe Response
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -19,10 +19,9 @@ class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler
         $this->router = $router;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response // Ajout du type de retour Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        $request->getSession()->set(Security::AUTHENTICATION_ERROR, new AuthenticationException('Identifiants invalides'));
-
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, 'Identifiants invalides');
         return new RedirectResponse($this->router->generate('app_login'));
     }
 }
