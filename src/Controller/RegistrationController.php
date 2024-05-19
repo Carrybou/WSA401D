@@ -32,7 +32,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -40,20 +39,20 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            // Persist the new user
+            $user->setColumnPreferences(["temp_min", "temp_max"]);
+
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Generate a signed URL and email it to the user
+            // Génèration d'un lien de confirmation et envoie un email
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('melvinbecue@gmail.com', 'sae401'))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Merci de confirmer votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
-            // Log the user in
             return $security->login($user, 'form_login', 'main');
         }
 
