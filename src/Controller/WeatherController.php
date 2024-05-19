@@ -131,7 +131,7 @@ class WeatherController extends AbstractController
             'error' => $error,
             'columnPreferences' => $columnPreferences,
             'forecastDataGrouped' => $forecastDataGrouped ?? [],
-            'chartData' => $chartData // Passer les données du graphique
+            'chartData' => $chartData
         ]);
     }
 

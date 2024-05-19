@@ -33,9 +33,11 @@
                 </div>
             {% endif %}
             <div class="btn-header">
+                {% if app.user %}
                 <a href="{{ path('app_profil')}}">
                     <button class="btn-modifname-homepage">Modifier mon prénom</button>
                 </a>
+                {% endif %}
 
                 {% if not app.user %}
                     <a href="{{ path('app_login') }}">

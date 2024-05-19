@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
 
+// Class qui gère les liens url incorrects
 class ExceptionListener
 {
     private $router;
