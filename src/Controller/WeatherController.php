@@ -50,6 +50,9 @@ class WeatherController extends AbstractController
         if ($selectedCity) {
             try {
                 $data = $this->weatherService->getWeatherData($selectedCity);
+                if (preg_match('/\d/', $selectedCity)){
+                    $selectedCity = $data['name'];
+                }
                 if (isset($data['main']['temp'])) {
                     $forecastData = $this->weatherService->getForecastData($data['coord']['lat'], $data['coord']['lon'], $selectedCity)['list'];
                     $weatherData[$selectedCity] = $this->prepareCurrentWeatherData($data);
