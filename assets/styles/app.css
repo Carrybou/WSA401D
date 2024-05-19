@@ -569,6 +569,19 @@ header{
     .card-register p{
         text-align: center;
     }
+
+    .logged{
+        height: 400px;
+    }
+    .btn-deconnexion{
+        width: 32vw;
+    }
+    .btn-maj-first-name{
+        width: 100%;
+    }
+    .logged div{
+        width: 100%;
+    }
 }
 
 
