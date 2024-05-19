@@ -64,18 +64,20 @@ button:hover::before,
     opacity: 1;
 }
 
-table{
-    border:none;
+table {
+    border: none;
     text-align: center;
     margin: 0 auto;
+    border-radius: 15px;
+    background: linear-gradient(45deg, #3a5e724e, #24353e49);
+    padding: 15px;
 }
 
-tr{
-    background-color: rgba(255,255,255,0.1);
+td, th {
+    border: none;
+    padding: 15px;
 }
-td{
-    background-color: rgba(255,255,255,0.1);
-}
+
 
 /* Base (Header) */
 header{
@@ -136,35 +138,65 @@ header{
 .pre-info-btn{
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 200px;
     margin: 30px 80px 30px 80px;
 }
 .btn-favorite{
     width: 230px;
 }
 
-.search{
-    width: auto;
-    margin-left: 10px;
-}
-.search:hover::before{
-    content: 'Rechercher';
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 230px;
+    height: 45px;
 }
 
-.form-search{
-    margin: 0 auto;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    gap:10px;
+.search-icon {
+    position: absolute;
+    width: 20px;
+    left: 10px;
 }
+
+#city {
+    padding-left: 30px;
+    width: 230px;
+    height: 20px;
+}
+
+.search{
+    position: absolute;
+    right: 15px;
+    width: 15px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background-image: none;
+    animation: none;
+    transition: none;
+    border-radius: 0;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.search::before{
+    content: '';
+    background-image: none;
+    animation: none;
+    transition: none;
+    border-radius: 0;
+}
+
+.search:hover{
+    transform: translateX(3px);
+} 
 
 .btn-favorite-R:hover::before{
     content: 'Retirer des favoris ♡';
 }
 .btn-favorite-A:hover::before{
-    content: 'Ajouter aux favoris ♥';
+    content: '3 favoris maximum ♥';
 }
 
 .error{
@@ -221,6 +253,13 @@ header{
     
 }
 
+.previdmd{
+    text-align: center;
+    width: 75%;
+    margin: 0 auto;
+    margin-top: 25px;
+}
+
 /* Default cities */
 .default-cities,
 .favorite-cities{
@@ -242,14 +281,11 @@ header{
 
 .weather-other-card-a:hover,
 .weather-fav-card-a:hover{
-    /* Monter de 10px */
     transform: translateY(-10px);
-    /* Grossir légèrement */
     transform: scale(1.05);
 }
 
 .weather-card{
-    /* background-color: #24353E; */
     background-image: linear-gradient(0.15turn, #3A5E72, #5C93B1);
     border-radius: 10px;
     padding: 20px;
@@ -271,7 +307,10 @@ header{
     top: 20px;
     left: 20px;
     font-family: 'Viga', sans-serif;
-    font-size: 27px;
+    margin: 0;
+    font-size: 40px;
+    line-height: 40px;
+    z-index: 100;
 }
 .icon-tab-previ5d-NoSearch{
     position: absolute;
@@ -318,7 +357,7 @@ header{
     width: 100%;
 }
 
-.form-register div:nth-child(3){
+.form-register div:nth-child(4){
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -336,19 +375,47 @@ header{
     margin: 0 auto;
     width: 50%;
     background-color: #24353E;
-    border-radius: 10px;*
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 130px;
+    height: 360px;
     text-align: center;
 }
 
+.logged div{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.btn-maj-first-name,
+.logged div{
+    width: 200px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+.logged div label{
+    margin-bottom: 5px;
+
+}
+
+.btn-maj-first-name::before{
+    content: 'Mettre à jour';
+}
+.btn-header{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
 .btn-deconnexion::before{
     content: 'Se déconnecter';
+}
+.btn-modifname-homepage::before{
+    content: 'Modifier mon prénom';
 }
 
 .btn-deconnexion{
@@ -402,11 +469,109 @@ header{
     width: 700px;
     height: 500px;
     background: rgba(255, 255, 255, 0.13);
-    backdrop-filter: blur(20px); /* Apply blur effect */
+    backdrop-filter: blur(20px);
     padding: 40px;
-    border-radius: 30px;
+    border-radius: 15px;
 }
 .chart-container{
     height: 500px;
     width: 800px;
 }
+
+/* --------------------- */
+/*-------- PHONE --------*/
+/* --------------------- */
+
+/* Version mobil */
+
+@media screen and (max-width: 768px) {
+    body{
+        font-size: 14px;
+    }
+
+    /* Header */
+    .villes-fav3{
+        display: none;
+    }
+    /* Search + Fav */
+    .pre-info-btn{
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        margin: 0;
+        align-items: center;
+    }
+    .form-search{
+        justify-content: center;
+    }
+
+    /* Graph + infos jour */
+    .toptier{
+        flex-direction: column-reverse;
+        gap: 20px;
+        width: 100%;
+    }
+    .chart-container{
+        width: 105vw;
+        height: auto;
+        display: flex;
+    }
+    #weatherChart{
+        margin: 0 auto;
+        padding: 10px;
+        max-width: 300px;
+        height: 300px;
+
+    }
+    .weather-card{
+        width: 90%;
+        max-width: 200px;
+        padding-top:80px;
+
+    }
+    .weather-card h3{
+        font-size: 30px;
+        margin: 0;
+        line-height: 40px;
+        z-index: 100
+    }
+    .icon-tab-previ5d-NoSearch{
+        width: 120px;
+        top: -50px;
+        right: -20px;
+    }
+
+    .table{
+        margin: 0 auto;
+        padding: 10px;
+        & td, & th {
+            padding: 5px;
+        }
+
+    }
+
+    /* Default & Fav cities */
+    .default-cities,
+    .favorite-cities{
+        flex-direction: column;
+        margin: 0;
+        gap: 55px;
+    }
+    .weather-card{
+        margin: 0 auto;
+    }
+
+    /* Register */
+    .card-register{
+        width: 60%;
+        padding: 0px 20px 40px 20px;
+    }
+    .card-register p{
+        text-align: center;
+    }
+}
+
+
+/* --------------------- */
+/*------ FIN PHONE ------*/
+/* --------------------- */

@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-    <form method="post">
+    <form method="post" action="{{ path('app_login') }}">
         {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="error" onclick="this.style.display='none'">
+                <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                <p>Cliquer sur la carte pour la faire disparaître.</p>
+            </div>
         {% endif %}
 
         {% if app.user %}
@@ -13,11 +16,6 @@
                 <p>Vous êtes connecté avec l'adresse email {{ app.user.userIdentifier }}.</p>
                 <a href="{{ path('app_logout') }}" class="btn-deconnexion">Se déconnecter</a>
             </div>
-
-            {# Préférence profil à mettre #}
-
-            {# FIN Préférence profil à mettre #}
-
         {% else %}
             <div class="card-register">
                 <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
@@ -28,7 +26,7 @@
                         <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
                     </div>
                     <div>
-                        <label for="password">Password</label>
+                        <label for="password">Mot de passe</label>
                         <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
                     </div>
                 </div>
@@ -44,8 +42,15 @@
 
                 <p>Vous n'avez pas de compte ? <a href="/register" class="link-seco">S'inscrire</a></p>
             </div>
-            
         {% endif %}
-        
     </form>
+
+    <script>
+        // Script pour cacher l'élément avec la classe "error" lorsqu'on clique dessus
+        document.querySelectorAll('.error').forEach(function(element) {
+            element.addEventListener('click', function() {
+                element.style.display = 'none';
+            });
+        });
+    </script>
 {% endblock %}

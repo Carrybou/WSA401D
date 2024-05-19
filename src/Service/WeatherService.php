@@ -31,6 +31,11 @@ class WeatherService
             if (file_exists($cacheFile)) {
                 unlink($cacheFile);
             }
+
+            if (is_numeric($city) && strlen($city) == 5) {
+                $city .= ',fr';
+            }
+
             $response = $this->httpClient->request('GET', "https://api.openweathermap.org/data/2.5/weather", [
                 'query' => [
                     'q' => $city,
@@ -41,6 +46,7 @@ class WeatherService
             ]);
 
             $data = $response->toArray();
+
 
             file_put_contents($cacheFile, json_encode($data));
         }
