@@ -196,7 +196,7 @@ header{
     content: 'Retirer des favoris ♡';
 }
 .btn-favorite-A:hover::before{
-    content: 'Ajouter aux favoris ♥';
+    content: '3 favoris maximum ♥';
 }
 
 .error{
